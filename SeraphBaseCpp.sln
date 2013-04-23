@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SeraphBaseCpp", "SeraphBaseCpp\SeraphBaseCpp.vcxproj", "{11BC3ECB-8785-4E6E-A447-2285B4576A9C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QGUI", "QGUI\QGUI.vcxproj", "{721F3C6D-CD3D-4450-A77A-EE33E36C39DF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SeraphMedia", "SeraphMedia\SeraphMedia.vcxproj", "{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11BC3ECB-8785-4E6E-A447-2285B4576A9C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{11BC3ECB-8785-4E6E-A447-2285B4576A9C}.Debug|Win32.Build.0 = Debug|Win32
+		{11BC3ECB-8785-4E6E-A447-2285B4576A9C}.Release|Win32.ActiveCfg = Release|Win32
+		{11BC3ECB-8785-4E6E-A447-2285B4576A9C}.Release|Win32.Build.0 = Release|Win32
+		{721F3C6D-CD3D-4450-A77A-EE33E36C39DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{721F3C6D-CD3D-4450-A77A-EE33E36C39DF}.Debug|Win32.Build.0 = Debug|Win32
+		{721F3C6D-CD3D-4450-A77A-EE33E36C39DF}.Release|Win32.ActiveCfg = Release|Win32
+		{721F3C6D-CD3D-4450-A77A-EE33E36C39DF}.Release|Win32.Build.0 = Release|Win32
+		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Debug|Win32.Build.0 = Debug|Win32
+		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Release|Win32.ActiveCfg = Release|Win32
+		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

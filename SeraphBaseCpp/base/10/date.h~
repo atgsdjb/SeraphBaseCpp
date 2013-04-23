@@ -1,0 +1,15 @@
+namespace Seraphim
+{
+  class Date
+  {
+    enum month
+    {
+      January = 1,
+      February,
+      March, April, May, June, July, August, September, october, November,
+	December
+    };
+  }
+
+
+}

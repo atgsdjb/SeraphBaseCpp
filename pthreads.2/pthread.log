@@ -1,0 +1,15 @@
+﻿Build started 3/17/2013 11:22:14 PM.
+     1>Project "D:\sources\SeraphBaseCpp\pthreads.2\pthread.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching ".\.\pthread.unsuccessfulbuild".
+       ClCompile:
+         All outputs are up-to-date.
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /D NDEBUG /D PTW32_RC_MSC /D _VC80_UPGRADE=0x0600 /l"0x0409" /I. /nologo /fo".\.\version.res" version.rc 
+     1>version.rc(119): error RC2104: undefined keyword or key name: PTW32_ARCH
+         
+     1>Done Building Project "D:\sources\SeraphBaseCpp\pthreads.2\pthread.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.09

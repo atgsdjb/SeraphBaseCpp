@@ -1,0 +1,208 @@
+﻿Build started 4/23/2013 10:13:01 PM.
+     1>Project "D:\sources\SeraphBaseCpp\SeraphMedia\SeraphMedia.vcxproj" on node 2 (build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(299,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+     1>InitializeBuildStatus:
+         Creating "Release\SeraphMedia.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       MessageBuildingWithCompiler:
+         Building with Intel(R) C++ Compiler XE 13.0
+       ClCompile:
+         ***** ClCompile (Win32 - Intel C++)
+         D:\Program Files (x86)\Intel\Composer XE 2013\bin\ia32\icl.exe /c /Qvc10 /Qlocation,link,"$(VCInstallDir)\bin" /Zi /nologo /W3 /O2 /Oi /Qipo /Qftz- /D __INTEL_COMPILER=1300 /D _MBCS /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TC aac\aacquant.c aac\backpred.c aac\bitstream.c aac\channels.c aac\fft.c aac\filtbank.c aac\frame.c aac\huffman.c aac\ltp.c aac\midside.c aac\psychkni.c aac\tns.c aac\util.c
+         aacquant.c
+         backpred.c
+         bitstream.c
+     1>aac\bitstream.c(124): warning #266: function "strlen" declared implicitly
+             len = strlen(str) + 1;
+                   ^
+         
+         channels.c
+         fft.c
+         filtbank.c
+         frame.c
+         huffman.c
+         ltp.c
+         midside.c
+         psychkni.c
+         tns.c
+     1>aac\tns.c(40): warning #2415: variable "tnsSupportedSamplingRates" of static storage duration was declared but never referenced
+           static unsigned long tnsSupportedSamplingRates[13] =
+                                ^
+         
+         util.c
+         D:\Program Files (x86)\Intel\Composer XE 2013\bin\ia32\icl.exe /c /Qvc10 /Qlocation,link,"$(VCInstallDir)\bin" /Zi /nologo /W3 /O2 /Oi /Qipo /Qftz- /D __INTEL_COMPILER=1300 /D _MBCS /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP mp4\3gp.cpp mp4\atom_amr.cpp mp4\atom_avc1.cpp mp4\atom_avcC.cpp mp4\atom_d263.cpp mp4\atom_damr.cpp mp4\atom_dref.cpp mp4\atom_elst.cpp mp4\atom_enca.cpp mp4\atom_encv.cpp mp4\atom_free.cpp mp4\atom_ftyp.cpp mp4\atom_hdlr.cpp mp4\atom_hinf.cpp mp4\atom_hnti.cpp mp4\atom_href.cpp mp4\atom_mdat.cpp mp4\atom_mdhd.cpp mp4\atom_meta.cpp mp4\atom_mp4s.cpp mp4\atom_mp4v.cpp mp4\atom_mvhd.cpp mp4\atom_ohdr.cpp mp4\atom_root.cpp mp4\atom_rtp.cpp mp4\atom_s263.cpp mp4\atom_sdp.cpp mp4\atom_smi.cpp mp4\atom_sound.cpp mp4\atom_standard.cpp mp4\atom_stbl.cpp mp4\atom_stdp.cpp mp4\atom_stsc.cpp mp4\atom_stsd.cpp mp4\atom_stsz.cpp mp4\atom_tfhd.cpp mp4\atom_tkhd.cpp mp4\atom_treftype.cpp mp4\atom_trun.cpp mp4\atom_udta.cpp mp4\atom_url.cpp mp4\atom_urn.cpp mp4\atom_video.cpp mp4\atom_vmhd.cpp mp4\descriptors.cpp mp4\isma.cpp mp4\mp4.cpp mp4\mp4atom.cpp mp4\mp4container.cpp mp4\mp4descriptor.cpp mp4\mp4file.cpp mp4\mp4file_io.cpp mp4\mp4info.cpp mp4\mp4meta.cpp mp4\mp4property.cpp mp4\mp4track.cpp mp4\mp4util.cpp mp4\mpeg4ip.cpp mp4\ocidescriptors.cpp mp4\odcommands.cpp mp4\qosqualifiers.cpp mp4\rtphint.cpp seraphim\aac_adts.cpp seraphim\import.cpp seraphim\main.cpp seraphim\mp4_creater.cpp seraphim\nalu_help.cpp seraphim\root.cpp seraphim\sync_buf.cpp seraphim\test3.cpp seraphim\yuv420.cpp seraphim\yuv420_asy.cpp
+         3gp.cpp
+         atom_amr.cpp
+         atom_avc1.cpp
+         atom_avcC.cpp
+         atom_d263.cpp
+         atom_damr.cpp
+         atom_dref.cpp
+         atom_elst.cpp
+         atom_enca.cpp
+         atom_encv.cpp
+         atom_free.cpp
+         atom_ftyp.cpp
+         atom_hdlr.cpp
+         atom_hinf.cpp
+         atom_hnti.cpp
+         atom_href.cpp
+         atom_mdat.cpp
+         atom_mdhd.cpp
+         atom_meta.cpp
+         atom_mp4s.cpp
+         atom_mp4v.cpp
+         atom_mvhd.cpp
+         atom_ohdr.cpp
+         atom_root.cpp
+         atom_rtp.cpp
+         atom_s263.cpp
+         atom_sdp.cpp
+         atom_smi.cpp
+         atom_sound.cpp
+         atom_standard.cpp
+         atom_stbl.cpp
+         atom_stdp.cpp
+         atom_stsc.cpp
+         atom_stsd.cpp
+         atom_stsz.cpp
+         atom_tfhd.cpp
+         atom_tkhd.cpp
+         atom_treftype.cpp
+         atom_trun.cpp
+         atom_udta.cpp
+         atom_url.cpp
+         atom_urn.cpp
+         atom_video.cpp
+         atom_vmhd.cpp
+         descriptors.cpp
+         isma.cpp
+         mp4.cpp
+         mp4atom.cpp
+         mp4container.cpp
+         mp4descriptor.cpp
+         mp4file.cpp
+         mp4file_io.cpp
+         mp4info.cpp
+         mp4meta.cpp
+         mp4property.cpp
+         mp4track.cpp
+         mp4util.cpp
+         mpeg4ip.cpp
+         ocidescriptors.cpp
+         odcommands.cpp
+         qosqualifiers.cpp
+         rtphint.cpp
+         aac_adts.cpp
+         import.cpp
+         main.cpp
+         You must include stdint.h or inttypes.h before x264.h
+     1>seraphim\main.cpp(394): warning #592: variable "result" is used before its value is set
+           	return result;
+           	       ^
+         
+         mp4_creater.cpp
+         nalu_help.cpp
+         root.cpp
+         You must include stdint.h or inttypes.h before x264.h
+         sync_buf.cpp
+         test3.cpp
+         yuv420.cpp
+         yuv420_asy.cpp
+       Link:
+         D:\Program Files (x86)\Intel\Composer XE 2013\bin\ia32\xilink.exe /OUT:".\BIN\SeraphMedia.exe" /NOLOGO /LIBPATH:D:\sources\SeraphBaseCpp\SeraphMedia\BIN pthreadVC2.lib "libx264-125.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\SeraphMedia.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\sources\SeraphBaseCpp\SeraphMedia\BIN\SeraphMedia.pdb" /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\BIN\SeraphMedia.lib" /MACHINE:X86 Release\aacquant.obj
+         Release\backpred.obj
+         Release\bitstream.obj
+         Release\channels.obj
+         Release\fft.obj
+         Release\filtbank.obj
+         Release\frame.obj
+         Release\huffman.obj
+         Release\ltp.obj
+         Release\midside.obj
+         Release\psychkni.obj
+         Release\tns.obj
+         Release\util.obj
+         Release\3gp.obj
+         Release\atom_amr.obj
+         Release\atom_avc1.obj
+         Release\atom_avcC.obj
+         Release\atom_d263.obj
+         Release\atom_damr.obj
+         Release\atom_dref.obj
+         Release\atom_elst.obj
+         Release\atom_enca.obj
+         Release\atom_encv.obj
+         Release\atom_free.obj
+         Release\atom_ftyp.obj
+         Release\atom_hdlr.obj
+         Release\atom_hinf.obj
+         Release\atom_hnti.obj
+         Release\atom_href.obj
+         Release\atom_mdat.obj
+         Release\atom_mdhd.obj
+         Release\atom_meta.obj
+         Release\atom_mp4s.obj
+         Release\atom_mp4v.obj
+         Release\atom_mvhd.obj
+         Release\atom_ohdr.obj
+         Release\atom_root.obj
+         Release\atom_rtp.obj
+         Release\atom_s263.obj
+         Release\atom_sdp.obj
+         Release\atom_smi.obj
+         Release\atom_sound.obj
+         Release\atom_standard.obj
+         Release\atom_stbl.obj
+         Release\atom_stdp.obj
+         Release\atom_stsc.obj
+         Release\atom_stsd.obj
+         Release\atom_stsz.obj
+         Release\atom_tfhd.obj
+         Release\atom_tkhd.obj
+         Release\atom_treftype.obj
+         Release\atom_trun.obj
+         Release\atom_udta.obj
+         Release\atom_url.obj
+         Release\atom_urn.obj
+         Release\atom_video.obj
+         Release\atom_vmhd.obj
+         Release\descriptors.obj
+         Release\isma.obj
+         Release\mp4.obj
+         Release\mp4atom.obj
+         Release\mp4container.obj
+         Release\mp4descriptor.obj
+         Release\mp4file.obj
+         Release\mp4file_io.obj
+         Release\mp4info.obj
+         Release\mp4meta.obj
+         Release\mp4property.obj
+         Release\mp4track.obj
+         Release\mp4util.obj
+         Release\mpeg4ip.obj
+         Release\ocidescriptors.obj
+         Release\odcommands.obj
+         Release\qosqualifiers.obj
+         Release\rtphint.obj
+         Release\aac_adts.obj
+         Release\import.obj
+         Release\main.obj
+         Release\mp4_creater.obj
+         Release\nalu_help.obj
+         Release\root.obj
+         Release\sync_buf.obj
+         Release\test3.obj
+         Release\yuv420.obj
+         Release\yuv420_asy.obj
+         xilink: executing 'link'
+         SeraphMedia.vcxproj -> D:\sources\SeraphBaseCpp\SeraphMedia\.\BIN\SeraphMedia.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:".\BIN\SeraphMedia.exe;#1" /manifest Release\SeraphMedia.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Release\SeraphMedia.unsuccessfulbuild".
+         Touching "Release\SeraphMedia.lastbuildstate".
+     1>Done Building Project "D:\sources\SeraphBaseCpp\SeraphMedia\SeraphMedia.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:42.47
