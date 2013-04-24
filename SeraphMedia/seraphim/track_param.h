@@ -27,6 +27,7 @@ public :
 class SVideoTrackParm : public STrackParam{
 public:
 	int width;
+
 	int height;
 	uint32_t durationPreFrame;
 	SVideoTrackParm(int _timeScale,int _width,int _height,int _bitRate,int _sampleRate,int _duration )

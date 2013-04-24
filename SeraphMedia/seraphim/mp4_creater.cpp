@@ -29,6 +29,7 @@ namespace Seraphim{
 			trackBufS[i] = _trackBufS[i];
 			trackParamS[i] = _trackParam[i];
 		}
+		initTracks();
 	}
 
 
@@ -69,10 +70,10 @@ namespace Seraphim{
 	}
 	MP4TrackId SMp4Creater::createVideoTrack(STrackParam* param){
 		SVideoTrackParm *p =(SVideoTrackParm*)param;
-		uint32_t timeScale=0;
-		MP4Duration sampleDuration = 0;
-		uint16_t width =0;
-		uint16_t height = 0;
+		uint32_t timeScale=p->timeScale;
+		MP4Duration sampleDuration = p->durationPreFrame;
+		uint16_t width =p->width;
+		uint16_t height = p->height;
 		return MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
 	}
 
@@ -99,11 +100,12 @@ namespace Seraphim{
 			trackTimesTampS[i] = 0;
 		}
 	}
+	static int g_index = 0;
 	void SMp4Creater::encodeLoop(){
-		int i = 0;
+		int i ;
 		uint8_t* sample;
-		while(comlete()){
-			for(i;i<trackCount;i++){
+		while(!comlete()){
+			for(i=0;i<trackCount;i++){
 				if(trackCompleteS[i])
 					continue;
 				int len = trackBufS[i]->read(&sample);
@@ -132,6 +134,7 @@ namespace Seraphim{
 					trackTimesTampS[i]+=((SAudioTrackParam*)trackParamS[i])->durationPreFrame;
 					trackCompleteS[i] = trackTimesTampS[i] >= trackDurationS[i]; 
 				}
+				cout<<"---------------------------------------"<<g_index++<<"---------------------------------------"<<endl;
 				MP4WriteSample(file,trackS[i],sample,len);
 
 

@@ -230,6 +230,7 @@ static void createMp4FormH264(char* h264Name,char* mp4File,int countFrame,int wi
 		 len = readHALU(buffer,dp,offset,sizeBuffer);
 		 cout<<"------indexFrame=-----"<<indexFrame++<<"----len-------"<<len<<"len"<<endl;
 			MP4WriteSample(file,video,dp,len);
+			
 			delete[] dp;
 			offset += len;
 		 offset +=len;
