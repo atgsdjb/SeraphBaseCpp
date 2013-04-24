@@ -25,6 +25,9 @@
 *.user
 *.filters
 *.tlog
+*.sln
+*.suo
+
 
 #othre
 *.yuv

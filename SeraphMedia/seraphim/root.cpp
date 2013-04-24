@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include"yuv420.h"
+#include"mp4_creater.h"
 using namespace std;
 using namespace Seraphim;
 #include"../mp4/mp4.h"
@@ -235,12 +236,14 @@ static void createMp4FormH264(char* h264Name,char* mp4File,int countFrame,int wi
 	 }
 	 MP4Close(file);
   };
-int main3()
+int main()
 {
 	int i;
 	//testEncoder();
-	createMp4FormH264("D:\\1video\\test_w352_h288_f2000a.h264","D:\\1video\\test_w352_h288_f2000b.mp4",0,0,0);
+	//createMp4FormH264("D:\\1video\\test_w352_h288_f2000a.h264","D:\\1video\\test_w352_h288_f2000b.mp4",0,0,0);
 	//encode();
+	SMp4Creater creater(0,0,2,0,0);
+	creater.startEncode();
 	cout<<"按任意键 退出"<<endl;
 	cin>>i;
 	return 0;

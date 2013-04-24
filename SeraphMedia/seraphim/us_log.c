@@ -10,7 +10,7 @@
 #include "us_log.h"
 #include <time.h>
 #include <stdio.h>
-#include <pthread.h>
+#include "pthread.h"
 #include <stdint.h>
 #include <string.h>
 #include <ctype.h>

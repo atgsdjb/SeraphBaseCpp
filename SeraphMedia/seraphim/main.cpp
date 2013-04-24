@@ -482,7 +482,7 @@ public :
 };
 
 #include"mp4_creater.h"
-int main(int argc, char ** argv){
+int main23(int argc, char ** argv){
 	
 	SMp4Creater creater(0,0,2,0,0);
 	creater.startEncode();
