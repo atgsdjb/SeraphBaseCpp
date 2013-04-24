@@ -236,15 +236,28 @@ static void createMp4FormH264(char* h264Name,char* mp4File,int countFrame,int wi
 	 }
 	 MP4Close(file);
   };
-int main()
+class F{
+public:
+	int d1;
+	F(int _d1):d1(_d1){};
+};
+class S :public F{
+public:
+	int d2;
+	S(int _d1,int _d2):F(_d1),d2(_d2){};
+};
+const char* name = "D:\\1video\\se0001.mp4";
+int main232()
 {
 	int i;
 	//testEncoder();
 	//createMp4FormH264("D:\\1video\\test_w352_h288_f2000a.h264","D:\\1video\\test_w352_h288_f2000b.mp4",0,0,0);
 	//encode();
-	SMp4Creater creater(0,0,2,0,0);
-	creater.startEncode();
-	cout<<"按任意键 退出"<<endl;
-	cin>>i;
+	//SyncBuffer *buf = new SyncBuffer;
+	//
+	//SMp4Creater creater(0,0,2,0,0);
+	//creater.startEncode();
+	//cout<<"按任意键 退出"<<endl;
+	//cin>>i;
 	return 0;
 }

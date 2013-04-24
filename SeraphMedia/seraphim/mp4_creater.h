@@ -10,6 +10,7 @@
 #include"pthread.h"
 #include"../mp4/mp4.h"
 #include<map>
+#include<vector>
 //class STrackParam;
 //class SAudioTrackParam;
 //class SVideoTrackParm;
@@ -21,7 +22,7 @@ using namespace std;
 namespace Seraphim{
 class SMp4Creater{
 private:
-	char		*name;
+	const char		*name;
 	uint32_t	duration;//sec
 	uint8_t		trackCount;
 	map<int,int>	trackS;
@@ -40,8 +41,8 @@ private:
 	void initTracks();
 	void encodeLoop();
 public:
-	SMp4Creater(char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam *_trackParam,SyncBuffer* _trackBufS, bool _isAsyn=true, CompleteListener _listener=0);
-	
+	SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam *_trackParam,SyncBuffer* _trackBufS, bool _isAsyn=false, CompleteListener _listener=0);
+	SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>& _trackParam,const vector<SyncBuffer*>& _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);	
 	void addSample8(uint8_t *sample,size_t size,uint8_t trackIndex);
 	void addSample16(uint16_t* sample,size_t size,uint8_t trackIndex);
 	void startEncode();

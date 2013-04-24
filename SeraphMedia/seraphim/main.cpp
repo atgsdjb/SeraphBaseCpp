@@ -483,17 +483,17 @@ public :
 
 #include"mp4_creater.h"
 int main23(int argc, char ** argv){
-	
-	SMp4Creater creater(0,0,2,0,0);
-	creater.startEncode();
+	//
+	//SMp4Creater creater(0,0,2,0,0);
+	//creater.startEncode();
 
-	SS ss(123);
-	ss.inster(1,100);
-	ss.inster(2,200);
-	cout<<ss.get(1)<<endl;
-	cout<<ss.get(2)<<endl;
-	int k;
-	cin>>k;
+	//SS ss(123);
+	//ss.inster(1,100);
+	//ss.inster(2,200);
+	//cout<<ss.get(1)<<endl;
+	//cout<<ss.get(2)<<endl;
+	//int k;
+	//cin>>k;
 	return 0;
 
 }

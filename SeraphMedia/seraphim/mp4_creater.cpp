@@ -16,9 +16,27 @@ namespace Seraphim{
 		}
 		return 0;
 	}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>&_trackParam,const vector<SyncBuffer*>& _trackBufS,bool _isAsyn,CompleteListener _listener)
+	:name(_name),duration(_duration),listener(_listener),isAsyn(_isAsyn){
+		int i = 0;
+		assert(_trackParam.size() == _trackBufS.size());
+		trackCount = _trackParam.size();
+		for(i;i<trackCount;i++){
+			trackS[i] = MP4_INVALID_TRACK_ID;
+			trackBufS[i] = _trackBufS[i];
+			trackParamS[i] = _trackParam[i];
+		}
+	}
 
 
-	SMp4Creater::SMp4Creater(char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam* _trackParam,SyncBuffer* _trackBufS,bool _isAsyn,CompleteListener _listener):name(_name),duration(_duration),listener(_listener),isAsyn(_isAsyn){
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam* _trackParam,SyncBuffer* _trackBufS,bool _isAsyn,CompleteListener _listener)
+		:name(_name),duration(_duration),listener(_listener),isAsyn(_isAsyn){
 		int i;
 		for (i = 0;i<trackCount;i++){
 			trackS[i] = MP4_INVALID_TRACK_ID;
@@ -34,8 +52,13 @@ namespace Seraphim{
 
 	}
 	void SMp4Creater::startEncode(){
-		pthread_t tid;
-		pthread_create(&tid,0,encode_task,this);
+		if(isAsyn){
+			pthread_t tid;
+			pthread_create(&tid,0,encode_task,this);
+		}else{
+			encodeLoop();
+		}
+		
 	}
 
 	MP4TrackId SMp4Creater::createAudioTrack(STrackParam * param){
