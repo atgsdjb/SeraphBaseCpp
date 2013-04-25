@@ -74,7 +74,7 @@ namespace Seraphim{
 		MP4Duration sampleDuration = p->durationPreFrame;
 		uint16_t width =p->width;
 		uint16_t height = p->height;
-		return MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
+		return MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x64,0x00,0x1f,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
 	}
 
 	void SMp4Creater::initTracks(){
@@ -125,7 +125,7 @@ namespace Seraphim{
 						}
 					}else{									     //正常写入A FRAME
 						//mp
-						MP4WriteSample(file,trackS[i],sample,len);
+						//MP4WriteSample(file,trackS[i],sample,len);
 						//没有区分非视频数据
 						trackTimesTampS[i] += ((SVideoTrackParm*)trackParamS[i])->durationPreFrame; 
 
@@ -134,7 +134,7 @@ namespace Seraphim{
 					trackTimesTampS[i]+=((SAudioTrackParam*)trackParamS[i])->durationPreFrame;
 					trackCompleteS[i] = trackTimesTampS[i] >= trackDurationS[i]; 
 				}
-				cout<<"---------------------------------------"<<g_index++<<"---------------------------------------"<<endl;
+				cout<<"--------------------------------"<<g_index++<<"----------------"<<"len="<<len<<"-----------------------"<<endl;
 				MP4WriteSample(file,trackS[i],sample,len);
 
 
@@ -153,6 +153,15 @@ namespace Seraphim{
 				return false;
 		}
 		return true;
+	}
+	bool SMp4Creater::addPPS(uint8_t* sps ,int lenSPS,int trackIndex){
+		return MP4AddH264PictureParameterSet(file,trackS[trackIndex],sps,lenSPS);
+	}
+	bool SMp4Creater::addSPS(uint8_t* pps ,int lenPPS,int trackIndex){
+		return MP4AddH264SequenceParameterSet(file,trackS[trackIndex],pps,lenPPS);
+	}
+	SyncBuffer* SMp4Creater::getBuffer(int trackIndex){
+		return trackBufS[trackIndex];
 	}
 	
 };

@@ -1,4 +1,4 @@
-//#define DEBUG 
+#include"s_config.h" 
 #include<cassert>
 #include<iostream>
 #include<vector>
@@ -7,7 +7,7 @@
 #include"mp4_creater.h"
 #include"track_param.h"
 #include"sync_buf.h"
-
+#include"nalu_help.h"
 #include"yuv420.h"
 extern"C"{
 #include"x264.h"
@@ -37,11 +37,12 @@ static void initParam(x264_param_t* pX264Param,int width ,int height){
 	pX264Param->i_height=height;
 }
 static void* encodeTask(void* _param){
-	SyncBuffer* syncBuff = (SyncBuffer*)_param;
+	SMp4Creater *handler =(SMp4Creater*)  _param ;
+	SyncBuffer* syncBuff = handler->getBuffer(0);
 	int iResult = 0;
 	int iNal;
 	x264_nal_t* pNals= new x264_nal_t;
-	//FILE* pFile= fopen("D:\\1video\\temp.h264","wb");
+	//FILE* pFile= fopen("D:\\1video\\seraphim.h264","wb");
 	x264_t * pX264Handle = NULL;
 	x264_param_t *param= new x264_param_t;
 	x264_param_default(param);
@@ -66,20 +67,25 @@ static void* encodeTask(void* _param){
 	unsigned int  indexFrame=0;
 	unsigned int  indexNALU = 0;
 	//int lt_index = 0;
+	bool notPPS = true;
+	bool notSPS = true;
 	while(y!=NULL /*&& lt_index++ < 4*/){
 		pPicIn->img.plane[0]=y;
 		pPicIn->img.plane[1]=yuv->getU();
 		pPicIn->img.plane[2]=yuv->getV();
 		iResult = x264_encoder_encode(pX264Handle,&pNals,&iNal,pPicIn,pPicOut);
+		uint8_t* pps = NULL;
+		uint8_t* sps = NULL;
 		if(iResult<0){
 			cout<<"编码器错误"<<endl;
 			return NULL;
-		}else if(iResult =0){
+		}else if(iResult ==0){
 			//cout<<"编码成功,但是被缓存"<<endl;
+			continue;
 		}else{
 			int l_postion = 0;
 			size_t size = 0;
-			for(int j = 0;j<iNal;++j)
+		for(int j = 0;j<iNal;++j)
 				size+= pNals[j].i_payload;
 			sampleBuffer = NULL;
 			sampleBuffer = new uint8_t[size];
@@ -88,11 +94,23 @@ static void* encodeTask(void* _param){
 			{
 				/*fwrite (pNals[i].p_payload, 1, pNals[i].i_payload, pFile);
 				fflush(pFile);*/
+				if(notSPS || notPPS){
+					int len  = pNals[i].i_payload;//- pNals[i].b_long_startcode;
+					uint8_t  *l_bs = new uint8_t[len];
+					memcpy(l_bs,pNals[i].p_payload /* +pNals[i].b_long_startcode */,len);
+					if(pNals[i].i_type == NAL_PPS){
+						notPPS = false;
+						handler->addPPS(pps,len,0);
+					}else if(pNals[i].i_type == NAL_SPS){
+						notSPS = false;
+						handler->addSPS(sps,len,0);
+					}
+				}
 				memcpy(sampleBuffer+l_postion,pNals[i].p_payload,pNals[i].i_payload);
 				l_postion+=pNals[i].i_payload;
 				//cout<<"编码成功,写入文件"<<"----------------------"<<indexNALU++<<"------NALU-size=-----"<<pNals[i].i_payload<<"------------"<<endl;
 			} 
-			cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<g_index++<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+			cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<g_index++<<"~~~~~~~~~~~~"<<"size="<<size<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
 			syncBuff->write23(sampleBuffer,size);
 			//cout<<"编码成功,写入文件"<<indexFrame++<<endl;
 
@@ -108,7 +126,7 @@ static void* encodeTask(void* _param){
 
 
 int main(int argc,char* argv){
-	char* name ="d:\\1video\\seraphim.mp4";
+	char* name ="d:\\1video\\seraphim2.mp4";
 	vector<SyncBuffer*> buf_v;
 	vector<STrackParam*> param_v;
 	SyncBuffer * g_buf = new SyncBuffer;
@@ -116,11 +134,48 @@ int main(int argc,char* argv){
 	buf_v.push_back(g_buf);
 	param_v.push_back(param);
 	pthread_t tid;
-	pthread_create(&tid,NULL,encodeTask,g_buf);
+
+	//uint8_t* fristSample;
+
+	//int len = -1;
+	//do{
+	//	len = g_buf->read(&fristSample);
+	//}while(len==0);
+	//vector<uint8_t*> naluS;
+	//vector<int> naluC;
+	//int count = getNaluS(fristSample,len,NALU4H,naluS,naluC);
+#ifdef SDEBUG
+	//cout<<count<<endl;
+#endif
+	//uint8_t* pps;
+	//int lenPps = -1;
+	//uint8_t* sps;
+	//int lenSps= -1;
+	//for(int i = 0;i<count;i++){
+	//	if(isSPS(naluS[i],NALU4H)){
+	//		sps = naluS[i];
+	//		lenSps = naluC[i];
+	//	}else if(isPPS(naluS[i],NALU4H)){
+	//		pps = naluS[i];
+	//		lenPps =naluC[i];
+	//	}else{
+	//		delete naluS[i];
+	//	}
+	//
+	//}
+#ifdef SDEBUG
+	//cout<<"pps len ="<<lenPps<<endl;
+	//cout<<"sps len ="<<lenSps<<endl;
+#endif
+
+
+
 	SMp4Creater creater(name,30,param_v,buf_v);
+		pthread_create(&tid,NULL,encodeTask,&creater);
 	creater.startEncode();
 	pthread_join(tid,NULL);
 
-	
+	int i;
+	cin>>i;
 return 0;
 }

@@ -46,6 +46,9 @@ public:
 	void addSample8(uint8_t *sample,size_t size,uint8_t trackIndex);
 	void addSample16(uint16_t* sample,size_t size,uint8_t trackIndex);
 	void startEncode();
+	bool addPPS(uint8_t *pps ,int lenPPS,int trackIndex);
+	bool addSPS(uint8_t *sps ,int lenSPS,int trackIndex);
+	SyncBuffer* getBuffer(int trackIndex);
 	friend void* encode_task(void*);
 
 };
