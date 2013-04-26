@@ -49,6 +49,9 @@ public:
 	bool addPPS(uint8_t *pps ,int lenPPS,int trackIndex);
 	bool addSPS(uint8_t *sps ,int lenSPS,int trackIndex);
 	SyncBuffer* getBuffer(int trackIndex);
+	STrackParam* getTrackParam(int trackIndex);
+
+
 	friend void* encode_task(void*);
 
 };

@@ -13,6 +13,16 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
+	bool isIFrame(uint8_t *frame){
+#ifdef  SDEBUG
+		
+#endif
+		int long_start_code = frame[3]==0x00?5:4;
+		return (frame[long_start_code]=65);
+	}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
 	int getNALUFormStream(uint8_t* stm,int lenStm,uint8_t** dist,nalu_head head,bool isCopy){
 		
 		if(head >= lenStm)

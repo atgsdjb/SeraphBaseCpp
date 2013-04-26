@@ -11,6 +11,7 @@
 #include"yuv420.h"
 extern"C"{
 #include"x264.h"
+#include"../aac/faac.h"
 };
 
 using namespace std;
@@ -95,15 +96,15 @@ static void* encodeTask(void* _param){
 				/*fwrite (pNals[i].p_payload, 1, pNals[i].i_payload, pFile);
 				fflush(pFile);*/
 				if(notSPS || notPPS){
-					int len  = pNals[i].i_payload;//- pNals[i].b_long_startcode;
+					int len  = pNals[i].i_payload-3- pNals[i].b_long_startcode;
 					uint8_t  *l_bs = new uint8_t[len];
-					memcpy(l_bs,pNals[i].p_payload /* +pNals[i].b_long_startcode */,len);
+					memcpy(l_bs,pNals[i].p_payload +3 +pNals[i].b_long_startcode/* */,len);
 					if(pNals[i].i_type == NAL_PPS){
 						notPPS = false;
-						handler->addPPS(pps,len,0);
+						handler->addPPS(l_bs,len,0);
 					}else if(pNals[i].i_type == NAL_SPS){
 						notSPS = false;
-						handler->addSPS(sps,len,0);
+						handler->addSPS(l_bs,len,0);
 					}
 				}
 				memcpy(sampleBuffer+l_postion,pNals[i].p_payload,pNals[i].i_payload);
@@ -122,60 +123,89 @@ static void* encodeTask(void* _param){
 	return 0;
 
 }
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
+void* aacEncodeThread(void* param){
+	FILE* aacFile = fopen("d:\\1video\\t4.aac","wb+");
+	FILE* pcmFile = fopen("d:\\1video\\t4.pcm","rb");
+	SMp4Creater *handler = (SMp4Creater*)param;
+	STrackParam *p = handler->getTrackParam(1);
+	if(p->getType()!=1){
+#ifdef SDEBUG
+		assert(0);
+#endif
+		exit(1);
+	}
+	SAudioTrackParam *audioParm = (SAudioTrackParam*)p; 
+		//QAudioTrackParam *audioP = (QAudioTrackParam*)trackParam;
+	unsigned long sampleRate = audioParm->sampleRate;
+	unsigned long bitRate = audioParm->bitRate;
+	int numChannels = 1;
+	unsigned long inputBuffSize;
+	unsigned long outBuffSize;
 
+	faacEncHandle aacHandler = faacEncOpen(sampleRate,numChannels,&inputBuffSize,&outBuffSize);
+	faacEncConfigurationPtr conf = faacEncGetCurrentConfiguration(aacHandler);
+	conf->bitRate = bitRate;
+	conf->inputFormat = FAAC_INPUT_16BIT;
+	//conf->channel_map =
+	conf->mpegVersion = MPEG4;
+	faacEncSetConfiguration(aacHandler,conf);
+	uint8_t* pcm=new uint8_t[1024*2];
+	SyncBuffer *aacBuffer = handler->getBuffer(1);
+	int len=-1;
+	uint8_t *l_sample=new uint8_t[1024*2];
+	size_t enc_len;
+	int lenRead=fread(pcm,1,2048,pcmFile);
+	do{
+		
+		/*int pcmOffset;
+		for(pcmOffset=0;pcmOffset<len;pcmOffset+=1024*2){*/
+			enc_len = faacEncEncode(aacHandler,(int32_t*)pcm,1024,l_sample,1024*2);
+			if(enc_len <=0){
+				continue;
+			}
+			uint8_t* l_b = new uint8_t[enc_len];
+			fwrite(l_sample,1,enc_len,aacFile);
+			fflush(aacFile);
+			memcpy(l_b,l_sample,enc_len);
+#ifdef SDEBUG
+#endif
+			aacBuffer->write23(l_b,enc_len);
+			lenRead = fread(pcm,1,2048,pcmFile);
+		//}
+	}while(lenRead==2048);
+	return 0;
+}
+
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
 
 
 int main(int argc,char* argv){
 	char* name ="d:\\1video\\seraphim2.mp4";
-	vector<SyncBuffer*> buf_v;
-	vector<STrackParam*> param_v;
-	SyncBuffer * g_buf = new SyncBuffer;
-	STrackParam *param = new SVideoTrackParm(90000,352,288,1024 * 500,15,30);
-	buf_v.push_back(g_buf);
-	param_v.push_back(param);
-	pthread_t tid;
-
-	//uint8_t* fristSample;
-
-	//int len = -1;
-	//do{
-	//	len = g_buf->read(&fristSample);
-	//}while(len==0);
-	//vector<uint8_t*> naluS;
-	//vector<int> naluC;
-	//int count = getNaluS(fristSample,len,NALU4H,naluS,naluC);
-#ifdef SDEBUG
-	//cout<<count<<endl;
-#endif
-	//uint8_t* pps;
-	//int lenPps = -1;
-	//uint8_t* sps;
-	//int lenSps= -1;
-	//for(int i = 0;i<count;i++){
-	//	if(isSPS(naluS[i],NALU4H)){
-	//		sps = naluS[i];
-	//		lenSps = naluC[i];
-	//	}else if(isPPS(naluS[i],NALU4H)){
-	//		pps = naluS[i];
-	//		lenPps =naluC[i];
-	//	}else{
-	//		delete naluS[i];
-	//	}
-	//
-	//}
-#ifdef SDEBUG
-	//cout<<"pps len ="<<lenPps<<endl;
-	//cout<<"sps len ="<<lenSps<<endl;
-#endif
-
-
-
-	SMp4Creater creater(name,30,param_v,buf_v);
-		pthread_create(&tid,NULL,encodeTask,&creater);
+	vector<SyncBuffer*> buf;
+	vector<STrackParam*> param;
+	SyncBuffer * gv_buf = new SyncBuffer;
+	STrackParam *v_param = new SVideoTrackParm(90000,352,288,1024 * 500,15,10*90000);
+	SyncBuffer *ga_buf = new SyncBuffer;
+	STrackParam *a_param = new SAudioTrackParam(44100,128*1024,44100,10 * 44100);
+	buf.push_back(gv_buf);
+	buf.push_back(ga_buf);
+	param.push_back(v_param);
+	param.push_back(a_param);
+	pthread_t tidVEncode;
+	pthread_t tidAEncode;
+	SMp4Creater creater(name,30,param,buf);
+	pthread_create(&tidVEncode,NULL,encodeTask,&creater);
+	pthread_create(&tidAEncode,NULL,aacEncodeThread,(void*)&creater);
 	creater.startEncode();
-	pthread_join(tid,NULL);
+	//pthread_join(tidAEncode,NULL);
+	//pthread_join(tidVEncode,NULL);
 
 	int i;
-	cin>>i;
+	//cin>>i;
 return 0;
 }

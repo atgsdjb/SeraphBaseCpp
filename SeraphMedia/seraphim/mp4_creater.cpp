@@ -2,10 +2,15 @@
 #ifdef DEBUG
 #include<iostream>
 #include<cassert>
+#include"nalu_help.h"
 #endif
 
 /**test**/
-
+#ifndef SDEBUG
+extern"C"{
+#include<stdio.h>
+};
+#endif
 namespace Seraphim{
 
 	static void* encode_task(void *handle){
@@ -64,8 +69,8 @@ namespace Seraphim{
 
 	MP4TrackId SMp4Creater::createAudioTrack(STrackParam * param){
 		SAudioTrackParam *p =(SAudioTrackParam*)param;
-		uint32_t timeScale = 0;
-		MP4Duration sampleDuration;
+		 MP4Duration timeScale = p->timeScale;
+		 MP4Duration sampleDuration = p->durationPreFrame;
 		return MP4AddAudioTrack(file,timeScale,sampleDuration);
 	}
 	MP4TrackId SMp4Creater::createVideoTrack(STrackParam* param){
@@ -74,7 +79,8 @@ namespace Seraphim{
 		MP4Duration sampleDuration = p->durationPreFrame;
 		uint16_t width =p->width;
 		uint16_t height = p->height;
-		return MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x64,0x00,0x1f,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
+		//return MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x64,0x00,0x1f,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
+		return MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x4d/*MP4_MPEG4_VIDEO_TYPE*/,0x40/*0x00 */,0x1e/*0x1f*/,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
 	}
 
 	void SMp4Creater::initTracks(){
@@ -118,8 +124,15 @@ namespace Seraphim{
 				int type = trackParamS[i]->type;
 				if(type==0){
 					if(trackTimesTampS[i] > trackDurationS[i]){   //保证没一video track  从SPS PPS开始
-						if(sample[4] == 0x65){
+						printf("-   GET I FRAME   type=%x-----",sample[4]);
+						/**/
+						uint8_t l_c =sample[5];
+						uint8_t l_d =sample[4];
+						/**/
+						if(isIFrame(sample)){
+						
 							trackBufS[i]->writeBack(sample,len);
+							
 							trackCompleteS[i]=true;
 							continue;
 						}
@@ -134,7 +147,7 @@ namespace Seraphim{
 					trackTimesTampS[i]+=((SAudioTrackParam*)trackParamS[i])->durationPreFrame;
 					trackCompleteS[i] = trackTimesTampS[i] >= trackDurationS[i]; 
 				}
-				cout<<"--------------------------------"<<g_index++<<"----------------"<<"len="<<len<<"-----------------------"<<endl;
+				//cout<<"--------------------------------"<<g_index++<<"----------------"<<"len="<<len<<"-----------------------"<<endl;
 				MP4WriteSample(file,trackS[i],sample,len);
 
 
@@ -163,5 +176,10 @@ namespace Seraphim{
 	SyncBuffer* SMp4Creater::getBuffer(int trackIndex){
 		return trackBufS[trackIndex];
 	}
+
+	STrackParam* SMp4Creater::getTrackParam(int trackIndex){
+		return trackParamS[trackIndex];
+	}
+
 	
 };
