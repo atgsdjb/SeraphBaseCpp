@@ -975,8 +975,14 @@ MP4TrackId MP4File::AddTrack(const char* type, u_int32_t timeScale)
 	MP4StringProperty* pStringProperty = NULL;
 	pTrakAtom->FindProperty(
 		"trak.mdia.hdlr.handlerType", (MP4Property**)&pStringProperty);
+	MP4StringProperty* pSPropertyName=NULL;
+	pTrakAtom->FindProperty("trak.mdia.hdlr.name",(MP4Property**)&pSPropertyName);
+
 	ASSERT(pStringProperty);
+	//normType = "GPAC ISO Video Handler";
 	pStringProperty->SetValue(normType);
+	ASSERT(pSPropertyName);
+	pSPropertyName->SetValue("GPAC ISO Video Handler");
 
 	// set track time scale
 	pInteger32Property = NULL;

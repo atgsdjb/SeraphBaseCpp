@@ -18,7 +18,8 @@ namespace Seraphim{
 		
 #endif
 		int long_start_code = frame[3]==0x00?5:4;
-		return (frame[long_start_code]=65);
+		return true;
+		//return (frame[long_start_code]==65);
 	}
 	/************************************************************************/
 	/*                                                                      */

@@ -16,6 +16,7 @@ extern"C"{
 
 using namespace std;
 using namespace Seraphim;
+#define AVC_SAMPLE_BUFFER_SIZE  1024 *500
 
 static int g_index =0;
 
@@ -43,7 +44,9 @@ static void* encodeTask(void* _param){
 	int iResult = 0;
 	int iNal;
 	x264_nal_t* pNals= new x264_nal_t;
-	//FILE* pFile= fopen("D:\\1video\\seraphim.h264","wb");
+	FILE* pFile= fopen("D:\\1video\\seraphim.h264","wb");
+	//
+	FILE *lFile = fopen("D:\\1video\\seraphim.nalu","wb");
 	x264_t * pX264Handle = NULL;
 	x264_param_t *param= new x264_param_t;
 	x264_param_default(param);
@@ -64,12 +67,12 @@ static void* encodeTask(void* _param){
 	Yuv420 *yuv = new Yuv420(352,288,0,"D:\\1video\\test_w352_h288_f2000.yuv");
 	int iDataLen = param->i_width * param->i_height;
 	uint8_t *y = yuv->getY();
-	uint8_t* sampleBuffer;// = new uint8_t[1024*1024*100];
 	unsigned int  indexFrame=0;
 	unsigned int  indexNALU = 0;
 	//int lt_index = 0;
 	bool notPPS = true;
 	bool notSPS = true;
+	uint8_t *lAVCBuf = new uint8_t[AVC_SAMPLE_BUFFER_SIZE];
 	while(y!=NULL /*&& lt_index++ < 4*/){
 		pPicIn->img.plane[0]=y;
 		pPicIn->img.plane[1]=yuv->getU();
@@ -85,20 +88,21 @@ static void* encodeTask(void* _param){
 			continue;
 		}else{
 			int l_postion = 0;
-			size_t size = 0;
-		for(int j = 0;j<iNal;++j)
-				size+= pNals[j].i_payload;
-			sampleBuffer = NULL;
-			sampleBuffer = new uint8_t[size];
-			assert(sampleBuffer);
 			for (int i = 0; i < iNal; ++i)
 			{
-				/*fwrite (pNals[i].p_payload, 1, pNals[i].i_payload, pFile);
-				fflush(pFile);*/
+				uint8_t	 naluHead[4]={0};
+				uint32_t sizePayload = pNals[i].i_payload-3-pNals[i].b_long_startcode ;
+				uint32_t naluSize = sizePayload +4 ;
+				naluHead[0] = (sizePayload >> 24) & 0xff;
+				naluHead[1] = (sizePayload >> 16) & 0xff;
+				naluHead[2] = (sizePayload >> 8)  & 0xff;
+				naluHead[3] = sizePayload & 0xff;
+				fwrite (pNals[i].p_payload, 1, pNals[i].i_payload, pFile);
+				fflush(pFile);
 				if(notSPS || notPPS){
 					int len  = pNals[i].i_payload-3- pNals[i].b_long_startcode;
 					uint8_t  *l_bs = new uint8_t[len];
-					memcpy(l_bs,pNals[i].p_payload +3 +pNals[i].b_long_startcode/* */,len);
+					memcpy(l_bs,pNals[i].p_payload +3 +pNals[i].b_long_startcode ,len);
 					if(pNals[i].i_type == NAL_PPS){
 						notPPS = false;
 						handler->addPPS(l_bs,len,0);
@@ -107,18 +111,22 @@ static void* encodeTask(void* _param){
 						handler->addSPS(l_bs,len,0);
 					}
 				}
-				memcpy(sampleBuffer+l_postion,pNals[i].p_payload,pNals[i].i_payload);
-				l_postion+=pNals[i].i_payload;
+				memcpy(lAVCBuf+l_postion,naluHead,4);
+				memcpy(lAVCBuf+l_postion+4,pNals[i].p_payload  + 3+ pNals[i].b_long_startcode,sizePayload);
+				l_postion+=naluSize;
 				//cout<<"编码成功,写入文件"<<"----------------------"<<indexNALU++<<"------NALU-size=-----"<<pNals[i].i_payload<<"------------"<<endl;
 			} 
-			cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<g_index++<<"~~~~~~~~~~~~"<<"size="<<size<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
-			syncBuff->write23(sampleBuffer,size);
+			//cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<g_index++<<"~~~~~~~~~~~~"<<"size="<<size<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+			fwrite(lAVCBuf,l_postion,1,lFile);
+			fflush(lFile);
+			syncBuff->write23(lAVCBuf,l_postion);
 			//cout<<"编码成功,写入文件"<<indexFrame++<<endl;
 
 		}
 		y = yuv->getY();
 	}
-	//fclose(pFile);
+	fclose(pFile);
+	fclose(lFile);
 	syncBuff->disable();
 	return 0;
 
@@ -189,16 +197,16 @@ int main(int argc,char* argv){
 	vector<SyncBuffer*> buf;
 	vector<STrackParam*> param;
 	SyncBuffer * gv_buf = new SyncBuffer;
-	STrackParam *v_param = new SVideoTrackParm(90000,352,288,1024 * 500,15,10*90000);
+	STrackParam *v_param = new SVideoTrackParm(90000,352,288,1024 * 500,25,120*90000);
 	SyncBuffer *ga_buf = new SyncBuffer;
-	STrackParam *a_param = new SAudioTrackParam(44100,128*1024,44100,10 * 44100);
-	buf.push_back(gv_buf);
+	STrackParam *a_param = new SAudioTrackParam(44100,128*1024,44100,120 * 44100);
 	buf.push_back(ga_buf);
+	buf.push_back(gv_buf);
 	param.push_back(v_param);
 	param.push_back(a_param);
 	pthread_t tidVEncode;
 	pthread_t tidAEncode;
-	SMp4Creater creater(name,30,param,buf);
+	SMp4Creater creater(name,120,param,buf);
 	pthread_create(&tidVEncode,NULL,encodeTask,&creater);
 	pthread_create(&tidAEncode,NULL,aacEncodeThread,(void*)&creater);
 	creater.startEncode();
