@@ -190,9 +190,42 @@ void* aacEncodeThread(void* param){
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-
-
+static uint8_t getMask(uint8_t num){
+	uint8_t i = 0;
+	uint8_t result = 0x00;
+	for(i;i<num;i++){
+		result >>=1;
+		result |= 0x80;
+	}
+	return result;
+}
+#include<cstdio>
+#include"bit_reader.h"
 int main(int argc,char* argv){
+	uint8_t buf[]={0x00,0xff,0x92,0x01,0x02};
+	SBitReader *reader = new SBitReader(buf,5);
+	uint8_t a;
+	uint16_t b ;
+	int len = 0;
+	len = reader->read((uint8_t*)&a,4);
+	printf("----------%x------%d-------\n",a,len);
+	len = reader->read((uint8_t*)&a,5);
+	printf("----------%x------%d-------\n",a,len);
+	len = reader->read(&a,3);
+	printf("----------%x------%d-------\n",a,len);
+	len = reader->read(&a,3);
+	printf("----------%x------%d-------\n",a,len);
+	len = reader->read(&a,5);
+	printf("----------%x-------%d------\n",a,len);
+	len = reader->read(&a,4);
+	printf("----------%x-------%d------\n",a,len);
+	len = reader->read((uint8_t*)&b,16);
+	printf("----------%x-----%d--------\n",b,len);
+	//delete reader;
+	int i ;
+	cin>>i;
+}
+int main4(int argc,char* argv){
 	char* name ="d:\\1video\\seraphim2.mp4";
 	vector<SyncBuffer*> buf;
 	vector<STrackParam*> param;
