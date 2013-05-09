@@ -22,37 +22,37 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	inline static uint8_t getHClearMask(uint8_t num){
-		uint8_t i = 0;
+	inline static uint8_t getHClearMask(uint8_t data,uint8_t num){
+		uint8_t i = 1;
 		uint8_t result = 0x00;
-		for(i;i<num;i++){
+		for(i;i <= num;i++){
 			result >>=1;
 			result |= 0x80;
 		}
-		return ~result;
+		return (~result) & data;
 	}
 
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	inline static uint8_t getLClearMask(uint8_t num){
-		uint8_t i = 0;
+	inline static uint8_t getLClearMask(uint8_t data ,uint8_t num){
+		uint8_t i = 1;
 		uint8_t result = 0x00;
-		for(i;i<num;i++){
+		for(i;i <= num;i++){
 			result <<=1;
 			result |= 0x01;
 		}
-		return ~result;
+		return (~result) & data;
 	}
 
 
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	inline static uint8_t getHSetMask(uint8_t num){
-		uint8_t i = 0;
+	inline static uint8_t getHSetMask(uint8_t data,uint8_t num){
+		uint8_t i = 1;
 		uint8_t result = 0x00;
-		for(i;i<num;i++){
+		for(i;i <= num;i++){
 			result >>=1;
 			result |= 0x80;
 		}
@@ -61,70 +61,58 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	inline static uint8_t getLSetMask(uint8_t num){
-		uint8_t i = 0;
+	inline static uint8_t getLSetMask(uint8_t data,uint8_t num){
+		uint8_t i = 1;
 		uint8_t result = 0x00;
-		for(i;i<num;i++){
+		for(i;i <= num;i++){
 			result <<=1;
 			result |= 0x01;
 		}
 		return result;
 	}
+	inline static void verify(uint8_t* d){
+		uint8_t l_d = *d %8+1;
+		*d =l_d;
+	}
 	/************************************************************************/
-	/*                default------BIGEND;positionBit from HigBit begin*/
+	/*                                                                      */
 	/************************************************************************/
 	int SBitReader::read(uint8_t* dst,int bitNum){
-		int l_byteNum = getByteNumOfBitNum(bitNum)-1;
-		uint8_t t_byteIndex=0;
+		int byteIndex=0;
 		while(bitNum>=8){
-			uint8_t t_d = 0x00;
-			if(positionBit==0){
-					t_d = buf[positionByte++] ;
-			}else{
-				t_d = (buf[positionByte]<<positionBit) |  (buf[positionByte+1]>>(8-positionBit)  )  ;//& getLClearMask(8-positionBit));
-				positionByte++;
-			}
-			dst[l_byteNum--] = t_d;
+			dst[byteIndex] = buf[positionByte] <<(8-positionBit);
+			positionByte++;
+			if(8>positionBit)   //may not be used
+				dst[byteIndex] |= buf[positionByte] >> positionBit;
+			byteIndex++;
 			bitNum -=8;
 		}
-		if(bitNum>0 && 8 >=(bitNum+positionBit)){
-			dst[l_byteNum] =  (buf[positionByte]& getHClearMask(positionByte)) >> (8-bitNum-positionBit) ; //_l;// >> (8-bitNum);
-			positionBit +=bitNum;
-			if(positionBit ==8){
-				positionBit =0;
-				positionByte++;
-			}
-		}else if(bitNum>0){
-			dst[l_byteNum] =   ( buf[positionByte] & getHClearMask(positionBit) ) << (bitNum -(8 - positionBit)) 
-								| ( buf[positionByte+1] >>(16-bitNum-positionBit) );
-			positionByte++;
-			positionBit = bitNum+positionBit -8;
-		}
-		ASSERT(positionBit<=7);
-		return (len-positionByte)*8-positionBit;
-	}
-	int SBitReader::readByte(uint8_t* dst){
-		return (len-positionByte)*8-positionBit;
-	}
-	int SBitReader::readInt(uint32_t* dst,bool isBigEnd){
-		uint8_t t_b[4]={0,0,0,0};
-		int t_d = 0x00000000;
-		int i =0;
-		read(t_b,sizeof(int));
-		if(isBigEnd){
-			while(true){
-				t_d |= t_b[i++];
-				if(i==sizeof(int)){
-					break;
-				}
-				t_d <<=8;
-			}
-		}else{
+		if(bitNum>0){
+			if(positionBit >= bitNum){
+				dst[byteIndex] = getHClearMask(buf[positionByte],8-positionBit) >>(positionBit-bitNum);
+				positionBit -= bitNum;
+				
+			}else{
+				dst[byteIndex] = getHClearMask(buf[positionByte++],8-positionBit) <<(bitNum - positionBit);
+				dst[byteIndex] |= buf[positionByte] >>8+positionBit-bitNum;// 8-(bitNum-positionBit)
+				positionBit = 8+positionBit - bitNum;
 
+			}
 		}
-		return (len-positionByte)*8-positionBit;
+
+
+		return (len-positionByte-1)+positionBit;
 	}
-	int SBitReader::readShort(uint16_t* dst,bool isBigEnd){
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	int SBitReader::readByte(uint8_t* dst,uint8_t numBit){
+
+	}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	int SBitReader::readShort(uint16_t* dst,uint8_t numBit,bool isBigEnd){
 		uint8_t t_b[2]={0,0};
 		int t_d = 0x0000;
 		int i =0;
@@ -142,7 +130,16 @@ namespace Seraphim{
 		}
 		return (len-positionByte)*8-positionBit;
 	}
-	int SBitReader::readLong(uint64_t* dst,bool isBigEnd){
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	int SBitReader::readInt(uint32_t* dst,uint8_t numBit,bool isBitEnd/* =true */){
+		return 0;
+	}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	int SBitReader::readLong(uint64_t* dst,uint8_t numBit,bool isBigEnd){
 		return (len-positionByte)*8-positionBit;
 	}
 }

@@ -9,12 +9,12 @@ namespace Seraphim{
 		size_t   positionByte;
 		uint8_t  positionBit;
 	public:
-		SBitReader(uint8_t* _buf,size_t _len):buf(_buf),len(_len),positionByte(0),positionBit(0){};
+		SBitReader(uint8_t* _buf,size_t _len):buf(_buf),len(_len),positionByte(0),positionBit(8){};
 		int read(uint8_t* dst,int bitNum);
-		int readByte(uint8_t* dst);
-		int readInt(uint32_t* dst,bool isBitEnd=true);
-		int readShort(uint16_t* dst,bool isBitEnd=true);
-		int readLong(uint64_t* dst,bool isBitEnd=true);
+		int readByte(uint8_t* dst,uint8_t numBit);
+		int readInt(uint32_t* dst,uint8_t numBit,bool isBitEnd=true);
+		int readShort(uint16_t* dst,uint8_t numBit,bool isBitEnd=true);
+		int readLong(uint64_t* dst,uint8_t numBit,bool isBitEnd=true);
 		~SBitReader(){delete[] buf;};
 	};
 };
