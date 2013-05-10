@@ -200,6 +200,7 @@ static uint8_t getMask(uint8_t num){
 	return result;
 }
 #include<cstdio>
+#include"../Saac/SGASpecificConfig.h"
 #include"bit_reader.h"
 int main(int argc,char* argv){
 	uint8_t buf[]={0x00,0xff,0x92,0x01,0x02};
