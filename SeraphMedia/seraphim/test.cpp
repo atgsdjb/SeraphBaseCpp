@@ -3,6 +3,7 @@
 #include<iostream>
 #include<vector>
 #include"pthread.h"
+#include"../Saac/SAudioMuxElement.h"
 //
 #include"mp4_creater.h"
 #include"track_param.h"
