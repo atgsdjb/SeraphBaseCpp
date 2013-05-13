@@ -3,13 +3,14 @@
 #include<stdint.h>
 #include"latm_config.h"
 #include"SAudioSpecificConfig.h"
+#include"SBitReadableImpl.h"
 namespace Seraphim{
 class SStreamMuxConfig_Prog_Layer;
 class SStreamMuxConfig_Prog;
-class SStreamMuxConfig{
+class SStreamMuxConfig : public SBitReadableImpl{
 private :
 	LATM_BIT_NUM(1) audioMuxVersion;//1
-#if(0)  LATM_ONLY(audioMuxVersion)
+#if(1)  LATM_ONLY(audioMuxVersion)
 	LATM_BIT_NUM(1) audioMuxVersionA; //1  may not have. 
 #endif
 #if(0) LATM_ONLY(audioMuxVersion==1 && androidMuxVersionA==0)
@@ -19,6 +20,19 @@ LATM_DEL_SLatmGetValue
 	LATM_BIT_NUM(6)  numSubFrames; //6
 	LATM_BIT_NUM(4)  numProgram; //4
 	SStreamMuxConfig_Prog *prog_S;// NUMOF numProgram
+
+private :
+	
+public:
+
+	LATM_BIT_NUM(1) getAudioMuxVersion(){return audioMuxVersion;};
+	LATM_BIT_NUM(1) getAudioMuxVersionA(){return audioMuxVersionA;};
+	LATM_BIT_NUM(1) getAllStreamsSameTimeFraming(){return allStreamsSameTimeFraming;};
+	LATM_BIT_NUM(6) getNumSubFrames(){return numSubFrames;};
+	LATM_BIT_NUM(4) getNumProgram(){return numProgram;};
+	
+	SStreamMuxConfig(SBitReader *_reader):SBitReadableImpl(_reader){};
+
 };
 /************************************************************************/
 /*                                                                      */
@@ -39,7 +53,7 @@ class SStreamMuxConfig_Prog_Layer{
 
 #if(1) LATM_ONLY(useSameConfig != 0)
 #if(1) LATM_ONLY(audioMuxVersion == 0)
-SSAudioSpecificConfig* SAudioSpecificConfig;
+SAudioSpecificConfig* SAudioSpecificConfig;
 #else
 LATM_DEL_SLatmGetValue
 SSAudioSpecificConfig *audioSPecificConfig; 

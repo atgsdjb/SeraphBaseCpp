@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SeraphMedia", "SeraphMedia\SeraphMedia.vcxproj", "{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SeraphMedia", "SeraphMedia\SeraphMedia.vcxproj", "{00F48E1C-BD6B-4177-B35A-BED6918E6DED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Debug|Win32.Build.0 = Debug|Win32
-		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Release|Win32.ActiveCfg = Release|Win32
-		{7FF53BA2-471D-484B-8CAF-B4EE3F1A5424}.Release|Win32.Build.0 = Release|Win32
+		{00F48E1C-BD6B-4177-B35A-BED6918E6DED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{00F48E1C-BD6B-4177-B35A-BED6918E6DED}.Debug|Win32.Build.0 = Debug|Win32
+		{00F48E1C-BD6B-4177-B35A-BED6918E6DED}.Release|Win32.ActiveCfg = Release|Win32
+		{00F48E1C-BD6B-4177-B35A-BED6918E6DED}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

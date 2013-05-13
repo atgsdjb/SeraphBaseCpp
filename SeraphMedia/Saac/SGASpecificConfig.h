@@ -4,11 +4,12 @@
 #include<stdint.h>
 #include"latm_config.h"
 #include"../seraphim/bit_reader.h"
+#include"SBitReadableImpl.h"
 namespace Seraphim{
 	class SProgramConfigElement;
 	
 
-class SGASpecificConfig
+class SGASpecificConfig :public SBitReadableImpl
 {
 private :
 	LATM_BIT_NUM(1)  frameLengthFlag; //1
@@ -35,13 +36,28 @@ private :
 #endif
 	LATM_BIT_NUM(1)  extensionFlag3; //1
 
+private:
+	SBitReader *reader;
+	uint8_t samplingFrequencyIndex;
+	uint8_t channelConfiguration;
+	uint8_t audioObjectType;
+	void process();
 
 public:
-	SGASpecificConfig(void){}
+	SGASpecificConfig(SBitReader* _reader,uint8_t _samplingFrequencyIndex,uint8_t _channelConfiguration):
+	SBitReadableImpl(_reader),
+	samplingFrequencyIndex(_samplingFrequencyIndex),
+	channelConfiguration(_channelConfiguration){process();
+	}
+
 	~SGASpecificConfig(void){}
 };
+
 	//inside
-class SProgramConfigElement{
+/*********************************************
+****
+**********************************************/
+class SProgramConfigElement :public SBitReadableImpl {
 private :
 
 	LATM_BIT_NUM(4) element_instance_tag; // 4   
@@ -53,14 +69,22 @@ private :
 	LATM_BIT_NUM(2)	num_lfe_channel_elements; // 2   
 	LATM_BIT_NUM(3)	num_assoc_data_elements;//  3 
 	LATM_BIT_NUM(4)	num_valid_cc_elements; // 4  
-#if(0) LATM_ONLY(mono_mixdown_present == 1)
+	LATM_BIT_NUM(1) mono_mixdown_present ;//1
+
+
+
+#if(1) LATM_ONLY(mono_mixdown_present == 1)
 	LATM_BIT_NUM(4) mono_mixdown_element_number;//  4 
 #endif
 	LATM_BIT_NUM(1)  stereo_mixdown_present; // 1
-#if(0) LATM_ONLY(stereo_mixdown_present == 1)
-	LATM_BIT_NUM(4) stereo_mixdown_element_number;  4 
+#if(1) LATM_ONLY(stereo_mixdown_present == 1)
+	LATM_BIT_NUM(4) stereo_mixdown_element_number;//  4 
 #endif
 	LATM_BIT_NUM(1)  matrix_mixdown_idx_present; //1
+#if(1) LATM_ONLY(matrix_mixdown_idx_present)
+	LATM_BIT_NUM(2)  matrix_mixdown_idx ; //2
+	LATM_BIT_NUM(1)  pseudo_surround_enable; //1
+#endif 
 	//
 	typedef struct{
 		LATM_BIT_NUM(1) front_element_is_cpe;//1
@@ -81,14 +105,10 @@ private :
 	back_element *back_element_S;// NUMOF num_back_channel_elements
 
 	//
-	typedef struct{
-		LATM_BIT_NUM(1) elf_element_is_cpe;//1
-		LATM_BIT_NUM(4) elf_element_tag_select;//4
-	}elf_element;
-	elf_element *elf_element_S;//NUMOF num_elf_channel_elements;
 
-	//
-	uint8_t * assoc_data_element_tag_select;// 4*num_assoc_data_elements
+	LATM_BIT_NUM(4)  *lfe_element_tag_select_S ;//num_assoc_data_elements
+
+	LATM_BIT_NUM(4) * assoc_data_element_tag_select_S;//num_assoc_data_elements
 
 	typedef struct{
 		LATM_BIT_NUM(1) cc_element_is_ind_sw;//1
@@ -98,6 +118,13 @@ private :
 #define BYTE_ALING
 	LATM_BIT_NUM(8)   comment_field_bytes; //8
 	uint8_t*  comment_field_data_S;// 8 *  comment_field_bytes
+
+private:
+	void process();
+public :
+	SProgramConfigElement(SBitReader *_reader):SBitReadableImpl(_reader){
+		process();
+	}
 };
 
 
