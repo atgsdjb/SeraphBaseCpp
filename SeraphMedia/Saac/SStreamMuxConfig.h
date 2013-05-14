@@ -1,6 +1,7 @@
 #ifndef __SSTREAM_MUX_CONFIG_H
 #define __SSTREAM_MUX_CONFIG_H
 #include<stdint.h>
+#include<iostream>
 #include"latm_config.h"
 #include"SAudioSpecificConfig.h"
 #include"SBitReadableImpl.h"
@@ -39,6 +40,7 @@ struct SStreamMuxConfig_Prog_Layer{
 #if(1) LATM_SELETE(1,frameLengthType) LATM_ONLY(6) LATM_ONLY(7) 
 //			....
 #endif
+			friend std::ostream& operator<<(std::ostream& o,SStreamMuxConfig_Prog_Layer& l);
 };
 
 /************************************************************************/
@@ -47,6 +49,7 @@ struct SStreamMuxConfig_Prog_Layer{
 struct SStreamMuxConfig_Prog{
 	LATM_BIT_NUM(3) numLayer; //3
 	SStreamMuxConfig_Prog_Layer *layer_S;// NUMOF numLayer
+	friend std::ostream& operator<<(std::ostream &o,SStreamMuxConfig_Prog& p);
 };
 
 /************************************************************************/
@@ -90,6 +93,8 @@ public:
 
 	void process();
 	SStreamMuxConfig(SBitReader *_reader):SBitReadableImpl(_reader){process();};
+	const char* toString();
+	friend std::ostream& operator<<(std::ostream& o,SStreamMuxConfig& streamMuxConfig);
 public:   //GETTER
 	LATM_BIT_NUM(1) getAudioMuxVersion(){return audioMuxVersion;};
 	LATM_BIT_NUM(1) getAudioMuxVersionA(){return audioMuxVersionA;};
@@ -107,6 +112,9 @@ public:   //GETTER
 	LATM_BIT_NUM(9) getFrameLength(uint8_t programIndex,uint8_t layerIndex){
 		return prog_S[programIndex].layer_S[layerIndex].frameLength;
 	};
+
+
+
 };
 };
 

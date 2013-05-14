@@ -89,6 +89,7 @@ namespace Seraphim{
 		}
 		if(bitNum>0){
 			if(positionBit >= bitNum){
+				size_t  l_pBy= positionByte;
 				dst[byteIndex] = getHClearMask(buf[positionByte],8-positionBit) >>(positionBit-bitNum);
 				positionBit -= bitNum;
 				
@@ -107,16 +108,17 @@ namespace Seraphim{
 	/*                                                                      */
 	/************************************************************************/
 	int SBitReader::readByte(uint8_t* dst,uint8_t numBit){
-		return 0;
+		read(dst,numBit);
+		return (len-positionByte)*8-positionBit;
 	}
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
 	int SBitReader::readShort(uint16_t* dst,uint8_t numBit,bool isBigEnd){
 		uint8_t t_b[2]={0,0};
-		int t_d = 0x0000;
+		uint16_t t_d = 0x0000;
 		int i =0;
-		read(t_b,sizeof(int));
+		read(t_b,numBit);
 		if(isBigEnd){
 			while(true){
 				t_d |= t_b[i++];
@@ -133,8 +135,23 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	int SBitReader::readInt(uint32_t* dst,uint8_t numBit,bool isBitEnd/* =true */){
-		return 0;
+	int SBitReader::readInt(uint32_t* dst,uint8_t numBit,bool isBigEnd/* =true */){
+		uint8_t t_b[4]={0,0,0,0};
+		uint32_t t_d = 0x00000000;
+		int i =0;
+		read(t_b,numBit);
+		if(isBigEnd){
+			while(true){
+				t_d |= t_b[i++];
+				if(i==sizeof(int)){
+					break;
+				}
+				t_d <<=8;
+			}
+		}else{
+
+		}
+		return (len-positionByte)*8-positionBit;
 	}
 	/************************************************************************/
 	/*                                                                      */

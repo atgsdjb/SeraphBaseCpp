@@ -30,7 +30,6 @@ LATM_BIT_NUM(1) *otherDataBit_S;// NUMOF otherDataLenBits
 #endif
 
 private:
-	SBitReader *reader;
 	void process();
 	uint8_t muxConfigPresent;
 
@@ -40,6 +39,9 @@ public:  //GETER
 	LATM_BIT_NUM(1) getUseSameStream(){return useSameStreamMux;};
 	SStreamMuxConfig * getStreamMuxConfig(){return streamMuxConfig;};
 	PayLoad* getPayLoad_S(){return payLoad_S;};
+	const char* toString();
+
+
 };
 /************************************************************************/
 /*                                                                      */

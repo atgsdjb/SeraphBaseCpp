@@ -9,7 +9,7 @@ private :
 protected:
 	uint8_t readedBitNum;
 	uint8_t getByte(uint8_t bitNum){
-		uint8_t ld;
+		uint8_t ld = 0;
 		reader->readByte(&ld,bitNum);
 		readedBitNum += bitNum;
 		return ld;
@@ -18,7 +18,7 @@ protected:
 	/*                                                                      */
 	/************************************************************************/
 	uint16_t getShort(uint8_t bitNum ){
-		uint16_t ld;
+		uint16_t ld = 0;
 		reader->readShort(&ld,bitNum);
 		readedBitNum += bitNum;
 		return ld;
@@ -27,7 +27,7 @@ protected:
 	/*                                                                      */
 	/************************************************************************/
 	uint32_t getInt(uint8_t bitNum){
-		uint32_t ld;
+		uint32_t ld = 0;
 		reader->readInt(&ld,bitNum);
 		readedBitNum += bitNum;
 		return ld;

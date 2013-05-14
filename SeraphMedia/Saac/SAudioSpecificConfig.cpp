@@ -1,11 +1,12 @@
 #include"SAudioMuxElement.h"
+#include<iostream>
 namespace Seraphim{
 void SAudioMuxElement::process(){
 	if(muxConfigPresent){
 		useSameStreamMux = getByte(1);
 	}
 	if(useSameStreamMux==0){
-		streamMuxConfig = new SStreamMuxConfig(reader);
+		streamMuxConfig = new SStreamMuxConfig(getReader());
 	}
 }
 
@@ -31,7 +32,7 @@ void SStreamMuxConfig::process(){
 		for(int i =0;i<numProgram;i++){
 			prog_S[i].numLayer = getByte(3);
 			prog_S[i].layer_S = new SStreamMuxConfig_Prog_Layer[prog_S[i].numLayer];
-			for(int l = 0;l<prog_S[i].numLayer;i++){
+			for(int l = 0;l<prog_S[i].numLayer;l++){
 				SStreamMuxConfig_Prog_Layer *layer = &(prog_S[i].layer_S[l]);
 
 				if(l==0 && i == 0){
@@ -74,6 +75,7 @@ void SStreamMuxConfig::process(){
 /*                                                                      */
 /************************************************************************/
  void	SAudioSpecificConfig::process(){
+	 objectType = new _AudioObjectType;
 	 objectType->audioObjectType = getByte(5);
 	 if(objectType->audioObjectType==31){
 	 this->objectType->audioObjectTypeExt = getByte(6) ;
@@ -91,49 +93,7 @@ void SStreamMuxConfig::process(){
 
  }
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/ 
-void SGASpecificConfig::process(){
-	frameLengthFlag = getByte(1);
 
-	dependsOnCoreCoder = getByte(1);
-
-	if(dependsOnCoreCoder){
-		coreCoderDelay = getShort(14);
-	}
-
-	extensionFlag = getByte(1);
-
-	if(channelConfiguration){
-		programConfigElement = new SProgramConfigElement(reader);
-	}
-	
-	if(audioObjectType == 6 || audioObjectType == 20 ){
-		layerNr = getByte(3);
-	}
-
-	if(extensionFlag && audioObjectType==22){
-		numOfSubFrame = getByte(5);
-		layer_length = getShort(11);
-	}
-
-	if(extensionFlag && (audioObjectType == 17 || 
-						 audioObjectType == 19 ||
-						 audioObjectType == 20 ||
-						 audioObjectType ==23)){
-			aacSectionDataResilienceFlag = getByte(1);
-			aacScalefactorDataResilienceFlag = getByte(1);
-			aacSpectralDataResilienceFlag = getByte(1);
-	}
-	extensionFlag3 = getByte(1);
-	if(extensionFlag3){
-		//...............
-	}
-
-
-
-}
 
 
 /************************************************************************/
@@ -219,5 +179,15 @@ void SProgramConfigElement::process(){
 		}
 	 }
 }
+ std::ostream& operator<<(std::ostream& o,SAudioSpecificConfig& c){
+	 o<<"SAudioSpecificConfig:{";
+	 o<<"[audioObjectType = "<<c.getAudioObjectType()<<"]";
+	 o<<"[audioObjectTypeExt = "<<c.getAudioObjectTypeExt()<<"]";
+	 o<<"[samplingFrequencyIndex ="<<c.getSamplingFrequencyIndex()<<"]";
+	 o<<"[samplingFrequency = "<<c.getSamplingFrequency()<<"]";
+	 o<<"[channelConfiguration = "<<c.getChannelConfiguration()<<"]";
+	 o<<"[gacSpecificConfig"<<c.getGacSpecificConfig()<<"]";
+	 return o;
+ }
 
 };

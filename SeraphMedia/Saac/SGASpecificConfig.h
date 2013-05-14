@@ -2,6 +2,7 @@
 #define  __SERAPHIM_SGASpecificConfig_H
 #pragma once
 #include<stdint.h>
+#include<iostream>
 #include"latm_config.h"
 #include"../seraphim/bit_reader.h"
 #include"SBitReadableImpl.h"
@@ -76,8 +77,11 @@ private:
 public :
 	SProgramConfigElement(SBitReader *_reader):SBitReadableImpl(_reader){
 		process();
-
+	
 	}	
+
+	friend std::ostream& operator<<(std::ostream& o,SProgramConfigElement& e);
+
 public: //GETTER
 	LATM_BIT_NUM(4) getElement_instance_tag(){return element_instance_tag;}
 	LATM_BIT_NUM(2)	getObject_type(){return object_type;}
@@ -162,12 +166,16 @@ public:
 	}
 
 	~SGASpecificConfig(void){}
+
+
+
+	friend std::ostream&  operator<<(std::ostream&,SGASpecificConfig&);
 public:  //GETTER
 	LATM_BIT_NUM(1)  getFrameLengthFlag(){return frameLengthFlag;}; //1
 	LATM_BIT_NUM(1)  getDependsOnCoreCoder(){return dependsOnCoreCoder;} //1
 	LATM_BIT_NUM(14) getCoreCoderDelay(){return coreCoderDelay;}//14 
 	LATM_BIT_NUM(1)  getExtensionFlag(){return extensionFlag;}
-	SProgramConfigElement* getProgramConfigElement(uint8_t programConfigElementIndex){return &(programConfigElement[programConfigElementIndex]);};
+	SProgramConfigElement* getProgramConfigElement(/*uint8_t programConfigElementIndex*/){return programConfigElement;};
 	LATM_BIT_NUM(3)  getLayerNr(){return layerNr;}
 	LATM_BIT_NUM(5)  getNumOfSubFrame(){return numOfSubFrame;}//5
 	LATM_BIT_NUM(11) getLayer_length(){return layer_length;} //11;

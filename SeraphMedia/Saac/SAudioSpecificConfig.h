@@ -1,6 +1,7 @@
 #ifndef __SERAPHIM_SAudioSpecificConfig_H
 #define __SERAPHIM_SAudioSpecificConfig_H
 #include<stdint.h>
+#include<iostream>
 #include"SGASpecificConfig.h"
 #include"../Seraphim/bit_reader.h"
 #include"SBitReadableImpl.h"
@@ -29,14 +30,16 @@ private:
 	void process();
 public:
 	SAudioSpecificConfig(SBitReader* _reader):SBitReadableImpl(_reader){process();};
-	
+	friend  std::ostream& operator<<(std::ofstream& o,SAudioSpecificConfig& c);
+
 
 public:  //GETTER
 	LATM_BIT_NUM(4)  getSamplingFrequencyIndex(){return samplingFrequencyIndex;};
 	LATM_BIT_NUM(24) getSamplingFrequency(){return samplingFrequency;};
 	LATM_BIT_NUM(4)  getChannelConfiguration(){return channelConfiguration;}
 	SGASpecificConfig *getGacSpecificConfig(){return gacSpecificConfig;};
-	LATM_BIT_NUM(5) getAudioObjectType(){return objectType->audioObjectType;} ;//5;
+	LATM_BIT_NUM(5)  getAudioObjectType(){return objectType->audioObjectType;} ;//5;
+	LATM_BIT_NUM(6)  getAudioObjectTypeExt(){return objectType->audioObjectTypeExt;};
 };
 /*class _AudioObjectType{
 }*/;
