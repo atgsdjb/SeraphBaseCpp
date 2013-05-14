@@ -1,6 +1,7 @@
 #ifndef __SAUDIO_MUX_ELEMENT_H
 #define __SAUDIO_MUX_ELEMENT_H
 #include<stdint.h>
+#include<iostream>
 #include"SStreamMuxConfig.h"
 #include"latm_config.h"
 #include"SBitReadableImpl.h"
@@ -40,6 +41,7 @@ public:  //GETER
 	SStreamMuxConfig * getStreamMuxConfig(){return streamMuxConfig;};
 	PayLoad* getPayLoad_S(){return payLoad_S;};
 	const char* toString();
+	friend std::ostream& operator<<(std::ostream& o,SStreamMuxConfig& c);
 
 
 };

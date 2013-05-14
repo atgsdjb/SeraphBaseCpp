@@ -71,7 +71,6 @@ private :
 #define BYTE_ALING
 	LATM_BIT_NUM(8)   comment_field_bytes; //8
 	uint8_t*  comment_field_data_S;// 8 *  comment_field_bytes
-
 private:
 	void process();
 public :

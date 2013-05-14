@@ -17,6 +17,7 @@ int main(int argc,char** argv){
 
 	SBitReader *reader= new SBitReader(rBuf,0x1d4); 
 	SAudioMuxElement audioMxElement(reader);
+	cout<<audioMxElement<<endl;
 	cin>>i;
 	return 0;
 }
