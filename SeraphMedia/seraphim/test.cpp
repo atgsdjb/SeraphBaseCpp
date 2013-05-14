@@ -203,7 +203,7 @@ static uint8_t getMask(uint8_t num){
 #include<cstdio>
 #include"../Saac/SGASpecificConfig.h"
 #include"bit_reader.h"
-int main(int argc,char* argv){
+int mainaaaaa(int argc,char* argv){
 	uint8_t buf[]={0x00,0xff,0x92,0x01,0x02};
 	SBitReader *reader = new SBitReader(buf,5);
 	uint8_t a;
@@ -230,6 +230,7 @@ int main(int argc,char* argv){
 	////delete reader;
 	int i ;
 	cin>>i;
+	return 0;
 }
 int main4(int argc,char* argv){
 	char* name ="d:\\1video\\seraphim2.mp4";

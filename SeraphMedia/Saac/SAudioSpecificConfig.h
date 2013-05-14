@@ -5,7 +5,9 @@
 #include"../Seraphim/bit_reader.h"
 #include"SBitReadableImpl.h"
 namespace Seraphim{
-class _AudioObjectType;
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
 class SAudioSpecificConfig : public SBitReadableImpl{
 private:
 	typedef struct{
@@ -28,6 +30,13 @@ private:
 public:
 	SAudioSpecificConfig(SBitReader* _reader):SBitReadableImpl(_reader){process();};
 	
+
+public:  //GETTER
+	LATM_BIT_NUM(4)  getSamplingFrequencyIndex(){return samplingFrequencyIndex;};
+	LATM_BIT_NUM(24) getSamplingFrequency(){return samplingFrequency;};
+	LATM_BIT_NUM(4)  getChannelConfiguration(){return channelConfiguration;}
+	SGASpecificConfig *getGacSpecificConfig(){return gacSpecificConfig;};
+	LATM_BIT_NUM(5) getAudioObjectType(){return objectType->audioObjectType;} ;//5;
 };
 /*class _AudioObjectType{
 }*/;

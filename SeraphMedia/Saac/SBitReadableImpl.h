@@ -14,19 +14,28 @@ protected:
 		readedBitNum += bitNum;
 		return ld;
 	}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
 	uint16_t getShort(uint8_t bitNum ){
 		uint16_t ld;
 		reader->readShort(&ld,bitNum);
 		readedBitNum += bitNum;
 		return ld;
 	}
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
 	uint32_t getInt(uint8_t bitNum){
 		uint32_t ld;
 		reader->readInt(&ld,bitNum);
 		readedBitNum += bitNum;
 		return ld;
 	}
-		uint8_t* getBits(uint8_t bitNum){
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	uint8_t* getBits(uint8_t bitNum){
 		uint8_t* dst;
 		uint8_t byteAddOne = bitNum%8==0?0:1;
 		uint8_t byteNum = bitNum /8 +byteAddOne;
@@ -35,6 +44,12 @@ protected:
 		readedBitNum += bitNum;
 		return dst;
 	}
+	void byteAlingFull(){
+		if(readedBitNum%8 ){
+			getByte(8-readedBitNum%8);
+		}
+	}
+	SBitReader * getReader(){return reader;}
 public:
 	SBitReadableImpl(SBitReader *_reader):reader(_reader),readedBitNum(0){};
 };

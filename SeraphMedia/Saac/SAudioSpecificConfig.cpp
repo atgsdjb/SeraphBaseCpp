@@ -9,9 +9,70 @@ void SAudioMuxElement::process(){
 	}
 }
 
-/***************
-**
-****************/
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
+void SStreamMuxConfig::process(){
+	audioMuxVersion = getByte(1);
+	if(audioMuxVersion){
+		audioMuxVersionA = getByte(1);
+	}else{
+		audioMuxVersionA = 0;
+	}
+
+	if(audioMuxVersionA==0){
+		if(audioMuxVersion !=0){
+			//  taraBufferFullness = LatmGetValue(); 
+		}
+		allStreamsSameTimeFraming = getByte(1);
+		numSubFrames = getByte(6);
+		numProgram = getByte(4);
+		prog_S = new SStreamMuxConfig_Prog[numProgram];
+		for(int i =0;i<numProgram;i++){
+			prog_S[i].numLayer = getByte(3);
+			prog_S[i].layer_S = new SStreamMuxConfig_Prog_Layer[prog_S[i].numLayer];
+			for(int l = 0;l<prog_S[i].numLayer;i++){
+				SStreamMuxConfig_Prog_Layer *layer = &(prog_S[i].layer_S[l]);
+
+				if(l==0 && i == 0){
+					layer->useSameConfig =0;
+				}else{
+					layer->useSameConfig = getByte(1);
+				}
+				if(layer->useSameConfig ==0){
+					if(audioMuxVersion ==0){
+						layer->sAudioSpecificConfig = new SAudioSpecificConfig(getReader());
+					}else{
+
+					}
+				}
+				layer->frameLengthType = getByte(3);
+				switch(layer->frameLengthType){
+				case 0:break;
+				case 1:
+					layer->frameLength = getShort(9);
+					break;
+				case 2:break;
+				case 3:case 4:case 5:break;
+				case 6:case 7:break;
+				}
+			}
+		}
+		crcCheckPresent = getByte(1);
+		if(crcCheckPresent){
+			crcCheckSum = getByte(8);
+		}
+	}else{
+
+	}
+
+
+
+}
+
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
  void	SAudioSpecificConfig::process(){
 	 objectType->audioObjectType = getByte(5);
 	 if(objectType->audioObjectType==31){
@@ -30,8 +91,9 @@ void SAudioMuxElement::process(){
 
  }
 
- 
-
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/ 
 void SGASpecificConfig::process(){
 	frameLengthFlag = getByte(1);
 
@@ -74,7 +136,9 @@ void SGASpecificConfig::process(){
 }
 
 
-
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
 void SProgramConfigElement::process(){
 	element_instance_tag = getByte(4);
 	object_type = getByte(2);
