@@ -30,7 +30,11 @@ private:
 	void process();
 public:
 	SAudioSpecificConfig(SBitReader* _reader):SBitReadableImpl(_reader){process();};
-	friend  std::ostream& operator<<(std::ofstream& o,SAudioSpecificConfig& c);
+	friend  std::ofstream& operator<<(std::ofstream& o,SAudioSpecificConfig& c);
+	friend std::ofstream& operator<<(std::ofstream& o,SAudioSpecificConfig* pc);/*{
+		operator<<(o,*pc);
+		return o;
+	};*/
 
 
 public:  //GETTER

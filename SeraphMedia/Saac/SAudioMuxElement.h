@@ -41,7 +41,11 @@ public:  //GETER
 	SStreamMuxConfig * getStreamMuxConfig(){return streamMuxConfig;};
 	PayLoad* getPayLoad_S(){return payLoad_S;};
 	const char* toString();
-	friend std::ostream& operator<<(std::ostream& o,SStreamMuxConfig& c);
+	friend std::ofstream& operator<<(std::ofstream& o,SAudioMuxElement& c);
+	friend std::ofstream& operator<<(std::ofstream& o,SAudioMuxElement* pc){
+		operator<<(o,*pc);
+		return o;
+	};
 
 
 };

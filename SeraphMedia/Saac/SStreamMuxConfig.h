@@ -40,7 +40,11 @@ struct SStreamMuxConfig_Prog_Layer{
 #if(1) LATM_SELETE(1,frameLengthType) LATM_ONLY(6) LATM_ONLY(7) 
 //			....
 #endif
-			friend std::ostream& operator<<(std::ostream& o,SStreamMuxConfig_Prog_Layer& l);
+			friend std::ofstream& operator<<(std::ofstream& o,SStreamMuxConfig_Prog_Layer& l);
+			friend std::ofstream& operator<<(std::ofstream& o,SStreamMuxConfig_Prog_Layer* pc){
+				operator<<(o,*pc);
+				return o;
+			};
 };
 
 /************************************************************************/
@@ -49,7 +53,11 @@ struct SStreamMuxConfig_Prog_Layer{
 struct SStreamMuxConfig_Prog{
 	LATM_BIT_NUM(3) numLayer; //3
 	SStreamMuxConfig_Prog_Layer *layer_S;// NUMOF numLayer
-	friend std::ostream& operator<<(std::ostream &o,SStreamMuxConfig_Prog& p);
+	friend std::ofstream& operator<<(std::ofstream &o,SStreamMuxConfig_Prog& p);
+	friend std::ofstream& operator<<(std::ofstream& o,SStreamMuxConfig_Prog* pc){
+		operator<<(o,*pc);
+		return o;
+	};
 };
 
 /************************************************************************/
@@ -93,8 +101,11 @@ public:
 
 	void process();
 	SStreamMuxConfig(SBitReader *_reader):SBitReadableImpl(_reader){process();};
-	const char* toString();
-	friend std::ostream& operator<<(std::ostream& o,SStreamMuxConfig& streamMuxConfig);
+	friend std::ofstream& operator<<(std::ofstream& o,SStreamMuxConfig c);
+	friend std::ofstream& operator<<(std::ofstream& o,SStreamMuxConfig* pc){
+			operator<<(o,*pc);	
+			return o;
+	};
 public:   //GETTER
 	LATM_BIT_NUM(1) getAudioMuxVersion(){return audioMuxVersion;};
 	LATM_BIT_NUM(1) getAudioMuxVersionA(){return audioMuxVersionA;};

@@ -15,7 +15,7 @@ namespace Seraphim{
 		extensionFlag = getByte(1);
 
 		if(channelConfiguration){
-			programConfigElement = new SProgramConfigElement(reader);
+			programConfigElement = new SProgramConfigElement(getReader());
 		}
 
 		if(audioObjectType == 6 || audioObjectType == 20 ){
@@ -44,24 +44,24 @@ namespace Seraphim{
 
 	}
 
-	std::ostream& operator<<(std::ostream& o,SGASpecificConfig& c){
+	std::ofstream& operator<<(std::ofstream& o,SGASpecificConfig& c){
 		o<<"SGASpecificConfig:{";
-		o<<"[AacScalefactorDataResilienceFlag = "<<c.getAacScalefactorDataResilienceFlag()<<"]";
-		o<<"[AacSectionDataResilienceFlag="<<c.getAacSectionDataResilienceFlag()<<"]";
-		o<<"[AacSpectralDataResilienceFlag="<<c.getAacSpectralDataResilienceFlag()<<"]";
-		o<<"[CoreCoderDelay="<<c.getCoreCoderDelay()<<"]";
-		o<<"[DependsOnCoreCoder="<<c.getDependsOnCoreCoder()<<"]";
-		o<<"[ExtensionFlag="<<c.getExtensionFlag()<<"]";
-		o<<"[extensionFlag3="<<c.getextensionFlag3()<<"]";
-		o<<"[FrameLengthFlag="<<c.getFrameLengthFlag()<<"]";
-		o<<"[Layer_length="<<c.getLayer_length()<<"]";
-		o<<"[LayerNr="<<c.getLayerNr()<<"]";
+		o<<"[AacScalefactorDataResilienceFlag = "<<(int)c.getAacScalefactorDataResilienceFlag()<<"]";
+		o<<"[AacSectionDataResilienceFlag="<<(int)c.getAacSectionDataResilienceFlag()<<"]";
+		o<<"[AacSpectralDataResilienceFlag="<<(int)c.getAacSpectralDataResilienceFlag()<<"]";
+		o<<"[CoreCoderDelay="<<(int)c.getCoreCoderDelay()<<"]";
+		o<<"[DependsOnCoreCoder="<<(int)c.getDependsOnCoreCoder()<<"]";
+		o<<"[ExtensionFlag="<<(int)c.getExtensionFlag()<<"]";
+		o<<"[extensionFlag3="<<(int)c.getextensionFlag3()<<"]";
+		o<<"[FrameLengthFlag="<<(int)c.getFrameLengthFlag()<<"]";
+		o<<"[Layer_length="<<(int)c.getLayer_length()<<"]";
+		o<<"[LayerNr="<<(int)c.getLayerNr()<<"]";
 		o<<"[ProgramConfigElement="<<c.getProgramConfigElement()<<"]";
 		o<<"[NumOfSubFrame="<<c.getNumOfSubFrame()<<"]";
 		return o;
 	}
- std::ostream& operator<<(std::ostream& o,SProgramConfigElement& e){
-	 o<<"SProgramConfigElement:";
+ std::ofstream& operator<<(std::ofstream& o,SProgramConfigElement &e){
+	o<<"SProgramConfigElement:";
 	o<<"[="<<e.getElement_instance_tag() <<"]";
 	o<<"[="<<e.getObject_type() <<"]";
 	o<<"[="<<e.getSampling_frequency_index()<<"]";

@@ -1,9 +1,29 @@
 #ifndef __SERAPHIM_LATM_CONFIG_H
 #define __SERAPHIM_LATM_CONFIG_H
+
+#include<fstream>
+
 #define LATM_ONLY(x) 
 #define LATM_DEL_SLatmGetValue
 #define fillBits
 #define LATM_SELETE(x,y)
+/*#define LATM_TYPE1 uint8_t
+#define LATM_TYPE2 uint8_t
+#define LATM_TYPE3 uint8_t
+#define LATM_TYPE4 uint8_t
+#define LATM_TYPE5 uint8_t
+#define LATM_TYPE6 uint8_t
+#define LATM_TYPE7 uint8_t
+#define LATM_TYPE8 uint8_t
+
+#define LATM_TYPE9 uint16_t
+#define LATM_TYPE10 uint16_t
+#define LATM_TYPE11 uint16_t
+#define LATM_TYPE12 uint16_t
+#define LATM_TYPE13 uint16_t
+#define LATM_TYPE14 uint16_t
+#define LATM_TYPE15 uint16_t
+#define LATM_TYPE16 uint16_t*/
 #define LATM_TYPE1 uint8_t
 #define LATM_TYPE2 uint8_t
 #define LATM_TYPE3 uint8_t
@@ -21,6 +41,7 @@
 #define LATM_TYPE14 uint16_t
 #define LATM_TYPE15 uint16_t
 #define LATM_TYPE16 uint16_t
+
 
 #define LATM_TYPE17 uint32_t
 #define LATM_TYPE18 uint32_t

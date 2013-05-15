@@ -3,8 +3,9 @@
 #include"../Saac/SAudioMuxElement.h"
 using namespace std;
 using namespace Seraphim;
-const char* fileName="d:\\1video\\9.latm";
+const char* fileName="d:\\1video\\4.latm";
 uint8_t rBuf[0x1d4]={0};
+#include<fstream>
 int main(int argc,char** argv){
 	FILE* file = fopen(fileName,"rb");
 	int rLen = fread(rBuf,1,0x1d4,file);
@@ -17,7 +18,9 @@ int main(int argc,char** argv){
 
 	SBitReader *reader= new SBitReader(rBuf,0x1d4); 
 	SAudioMuxElement audioMxElement(reader);
-	cout<<audioMxElement<<endl;
+	ofstream of("d:\\1video\\latm.4");
+	
+	of<<audioMxElement<<endl;
 	cin>>i;
 	return 0;
 }

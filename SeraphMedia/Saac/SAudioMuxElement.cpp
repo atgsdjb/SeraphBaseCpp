@@ -1,8 +1,12 @@
 #include"SAudioMuxElement.h"
 namespace Seraphim{
-	std::ostream& operator<<(std::ostream&o,SAudioMuxElement& m ){
+	std::ofstream& operator<<(std::ofstream&o,SAudioMuxElement& m ){
 		o<<"SAudioMuxElement:{";
-		o<<"[="<<m.getStreamMuxConfig()<<"";
+		SStreamMuxConfig mux = *(m.getStreamMuxConfig());
+		//o<<mux;
+		o<<"[=";
+		o<<mux<<"]";
+		o<<"}";
 		return o;
 	}
 };

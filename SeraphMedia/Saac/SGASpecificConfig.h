@@ -79,7 +79,11 @@ public :
 	
 	}	
 
-	friend std::ostream& operator<<(std::ostream& o,SProgramConfigElement& e);
+	friend std::ofstream& operator<<(std::ofstream& o,SProgramConfigElement& e);
+	friend std::ofstream& operator<<(std::ofstream& o,SProgramConfigElement* pc){
+		operator<<(o,*pc);
+		return o;
+	};
 
 public: //GETTER
 	LATM_BIT_NUM(4) getElement_instance_tag(){return element_instance_tag;}
@@ -168,7 +172,11 @@ public:
 
 
 
-	friend std::ostream&  operator<<(std::ostream&,SGASpecificConfig&);
+	friend std::ofstream&  operator<<(std::ofstream&,SGASpecificConfig& c);
+	friend std::ofstream& operator<<(std::ofstream& o,SGASpecificConfig* pc){
+		operator<<(o,*pc);
+		return o;
+	};
 public:  //GETTER
 	LATM_BIT_NUM(1)  getFrameLengthFlag(){return frameLengthFlag;}; //1
 	LATM_BIT_NUM(1)  getDependsOnCoreCoder(){return dependsOnCoreCoder;} //1
