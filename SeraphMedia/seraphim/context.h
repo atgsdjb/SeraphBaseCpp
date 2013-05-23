@@ -16,9 +16,15 @@ typedef struct{
 	std::map<uint8_t,uint64_t>     idAndNSample;
 	std::map<uint8_t,SSyncBuffer*> idAndBuf;
 	bool runing;
-}SEncodeContext;
+}SEncoderContext;
 extern size_t g_lenPPS;
 extern size_t g_lenSPS;
 extern uint8_t* g_PPS;
 extern uint8_t* g_SPS;
+extern SEncoderContext* context;
+
+void* workTask(void*);
+void* aacTask(void*);
+void* avcTask(void*);
+
 #endif

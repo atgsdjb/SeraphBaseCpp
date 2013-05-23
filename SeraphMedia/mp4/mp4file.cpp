@@ -665,7 +665,7 @@ const char* MP4File::TempFileName()
 	GetTempFileName((LPCTSTR)".", // dir. for temp. files 
 					(LPCTSTR)"mp4",                // temp. filename prefix 
 					0,                    // create unique name 
-					(LPWSTR)m_tempFileName);        // buffer for name 
+					(LPSTR)m_tempFileName);        // buffer for name 
 #endif
 
 	return m_tempFileName;
