@@ -5,7 +5,7 @@
 
 #define LATM_ONLY(x) 
 #define LATM_DEL_SLatmGetValue
-#define fillBits
+#define FILLBITS
 #define LATM_SELETE(x,y)
 /*#define LATM_TYPE1 uint8_t
 #define LATM_TYPE2 uint8_t

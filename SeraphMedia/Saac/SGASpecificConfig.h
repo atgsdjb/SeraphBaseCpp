@@ -4,7 +4,7 @@
 #include<stdint.h>
 #include<iostream>
 #include"latm_config.h"
-#include"../seraphim/bit_reader.h"
+#include"../seraphim/SBitReader.h"
 #include"SBitReadableImpl.h"
 namespace Seraphim{
 /*********************************************

@@ -135,7 +135,7 @@ void SAudioMuxElement::process(){
 	 o<<"[audioObjectType = "<<(int)c->getAudioObjectType()<<"]";
 	 //o<<"[audioObjectTypeExt = "<<(int)c->getAudioObjectTypeExt()<<"]";
 	 o<<"[samplingFrequencyIndex ="<<(int)c->getSamplingFrequencyIndex()<<"]";
-	 o<<"[samplingFrequency = "<<(int)c->getSamplingFrequency()<<"]";
+	 o<<"[samplingFrequency = "<<(unsigned int)c->getSamplingFrequency()<<"]";
 	 o<<"[channelConfiguration = "<<(int)c->getChannelConfiguration()<<"]";
 	 o<<"[gacSpecificConfig"<<c->getGacSpecificConfig()<<"]";
 	 return o;

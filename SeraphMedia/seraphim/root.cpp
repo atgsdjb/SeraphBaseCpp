@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include"yuv420.h"
-#include"mp4_creater.h"
+#include"SMp4Creater.h"
 using namespace std;
 using namespace Seraphim;
 #include"../mp4/mp4.h"

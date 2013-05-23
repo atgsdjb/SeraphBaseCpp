@@ -1,9 +1,10 @@
-#include"s_config.h"
-#include"nalu_help.h"
-
-#include<cstdlib>
+#include"SNaluHelp.h"
+extern"C"{
+#include<stdlib.h>
+#include<string.h>
+}
 #include<vector>
-#include<cstring>
+
 #ifdef SDEBUG
 #include<iostream>
 #include<cassert>
@@ -93,7 +94,7 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	NaluHelp::NaluHelp(char* name,size_t _maxSize):postion(0),end_buf(0),maxSize(_maxSize){
+	SNaluHelp::SNaluHelp(char* name,size_t _maxSize):postion(0),end_buf(0),maxSize(_maxSize){
 		file = fopen(name,"rb");
 		//assert(file);
 		buf = new uint8_t[maxSize];
@@ -101,7 +102,7 @@ namespace Seraphim{
 		end_buf= buf+maxSize;
 		
 	}
-	uint8_t* NaluHelp::nextNALU(){
+	uint8_t* SNaluHelp::nextNALU(){
 		int len =4;
 		while(true){
 			//每次迭代,4个字节
@@ -113,7 +114,7 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	bool NaluHelp::checkEmpty(){
+	bool SNaluHelp::checkEmpty(){
 		if(postion >= end_buf){
 			return fullBuffer();
 		}
@@ -122,7 +123,7 @@ namespace Seraphim{
 	/**
 	
 	**/
-	bool   NaluHelp::fullBuffer(){
+	bool   SNaluHelp::fullBuffer(){
 		
 		if(postion < end_buf){
 		 memcpy(buf,postion,size_t(end_buf - postion));

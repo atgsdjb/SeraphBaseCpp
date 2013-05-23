@@ -11,28 +11,24 @@ namespace Seraphim{
 /*                                                                      */
 /************************************************************************/
 struct SStreamMuxConfig_Prog_Layer{
-#if(1)  LATM_ONLY(prog != 0 || lay != 0)
-		LATM_BIT_NUM(1) useSameConfig ;//1  if( prog 1= 0 || lay == 0)
-#endif
-
-
-#if(1) LATM_ONLY(useSameConfig != 0)
-#if(1) LATM_ONLY(audioMuxVersion == 0)
-		SAudioSpecificConfig* sAudioSpecificConfig;
-#else
-		LATM_DEL_SLatmGetValue
-			SSAudioSpecificConfig *audioSPecificConfig; 
-		uint8_t *fillBits // len = getVleue() - AudioSPecificConfig
-#endif
-#endif
-
-			LATM_BIT_NUM(3)	frameLengthType;//3
-#if(1) LATM_SELETE(1,frameLengthType) LATM_ONLY(0)
-	//	latmBufferFullness;
-	//	...........
+	LATM_BIT_NUM(1) useSameConfig;
+	SAudioSpecificConfig* sAudioSpecificConfig;
+	//LATM_BIT_NUM(8) *fillBits;
+	uint8_t *fillBits;
+	LATM_BIT_NUM(3)	frameLengthType;
+#if(1) LATM_SELETE(1) LATM_ONLY(0)
+	LATM_BIT_NUM(8)  latmBufferFullness;
+	/*if (frameLengthType[streamID[prog][lay] == 0) {           
+		latmBufferFullness[streamID[prog][ lay]];  8       uimsbf 
+			if (! allStreamsSameTimeFraming) {           
+				if ((AudioObjectType[lay] == 6 || 
+					AudioObjectType[lay] == 20) && 
+					(AudioObjectType[lay-1] == 8 || 
+					AudioObjectType[lay-1] == 24))*/
+	LATM_BIT_NUM(6)  coreFrameOffset;
 #endif
 #if(1) LATM_SELETE(1,frameLengthType) LATM_ONLY(1)
-			LATM_BIT_NUM(9) frameLength;//  frameLength[streamID[prog][lay]]; 
+	   LATM_BIT_NUM(9) frameLength;//  frameLength[streamID[prog][lay]]; 
 #endif
 #if(1) LATM_SELETE(1,frameLengthType) LATM_ONLY(4) LATM_ONLY(5)  LATM_ONLY(3)
 	//	.....
@@ -72,22 +68,20 @@ private :
 #if(0) LATM_ONLY(audioMuxVersion==1 && adudioMuxVersionA==0)
 LATM_DEL_SLatmGetValue
 #endif
-	LATM_BIT_NUM(1)  allStreamsSameTimeFraming; //1
-	LATM_BIT_NUM(6)  numSubFrames; //6
-	LATM_BIT_NUM(4)  numProgram; //4
-	SStreamMuxConfig_Prog *prog_S;// NUMOF numProgram
-	LATM_BIT_NUM(1) otherDataPresent;//
-#if(0) LATM_ONLY(otherDataPresent)
-#if(0)
+LATM_BIT_NUM(1)  allStreamsSameTimeFraming; //1
+LATM_BIT_NUM(6)  numSubFrames; //6
+LATM_BIT_NUM(4)  numProgram; //4
+SStreamMuxConfig_Prog *prog_S;// NUMOF numProgram
+LATM_BIT_NUM(1) otherDataPresent;//
+#if(1) LATM_ONLY(otherDataPresent)
+#if(0) LATM_ONLY( audioMuxVersion == 1 )
 	  otherDataLenBits = LatmGetValue(); 
 #else
-	otherDataLenBits = 0; /* helper variable 32bit */           
-	do {           
-		otherDataLenBits *= 2^8;           
-		otherDataLenEsc;  1       uimsbf 
-			otherDataLenTmp;  8       uimsbf 
-			otherDataLenBits += otherDataLenTmp;           
-	} while (otherDataLenEsc); 
+	typedef struct{
+		LATM_BIT_NUM(1) otherDataLenEsc;
+		LATM_BIT_NUM(8) otherDataLenTmp; 
+	}OtherDataLen;
+	OtherDataLen *otherDataLen_S;
 #endif
 #endif
 

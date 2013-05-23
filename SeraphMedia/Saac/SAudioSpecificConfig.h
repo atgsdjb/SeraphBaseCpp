@@ -3,7 +3,7 @@
 #include<stdint.h>
 #include<iostream>
 #include"SGASpecificConfig.h"
-#include"../Seraphim/bit_reader.h"
+#include"../Seraphim/SBitReader.h"
 #include"SBitReadableImpl.h"
 namespace Seraphim{
 /************************************************************************/

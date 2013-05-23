@@ -5,8 +5,8 @@
 
 
 #include<cstdint>
-#include"sync_buf.h"
-#include"track_param.h"
+#include"SSyncBuf.h"
+#include"StrackParam.h"
 #include"pthread.h"
 #include"../mp4/mp4.h"
 #include<map>
@@ -25,12 +25,12 @@ private:
 	const char		*name;
 	uint32_t	duration;//sec
 	uint8_t		trackCount;
-	map<int,int>	trackS;
-	map<int,STrackParam*> trackParamS;
-	map<int,SyncBuffer*>  trackBufS;
-	map<int,bool> trackCompleteS;
-	map<int,MP4Duration> trackDurationS;
-	map<int,MP4Duration> trackTimesTampS;
+	map<uint8_t,int>	trackS;
+	map<uint8_t,STrackParam*> trackParamS;
+	map<uint8_t,SSyncBuffer*>  trackBufS;
+	map<uint8_t,bool> trackCompleteS;
+	map<uint8_t,MP4Duration> trackDurationS;
+	map<uint8_t,MP4Duration> trackTimesTampS;
 
 	bool isAsyn;
 	CompleteListener listener;
@@ -41,14 +41,15 @@ private:
 	void initTracks();
 	void encodeLoop();
 public:
-	SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam *_trackParam,SyncBuffer* _trackBufS, bool _isAsyn=false, CompleteListener _listener=0);
-	SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>& _trackParam,const vector<SyncBuffer*>& _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);	
+	SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam *_trackParam,SSyncBuffer* _trackBufS, bool _isAsyn=false, CompleteListener _listener=0);
+	SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>& _trackParam,const vector<SSyncBuffer*>& _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);	
+	SMp4Creater(const char* _name,map<uint8_t,STrackParam*> _trackParamS,map<uint8_t,SSyncBuffer*> _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);
 	void addSample8(uint8_t *sample,size_t size,uint8_t trackIndex);
 	void addSample16(uint16_t* sample,size_t size,uint8_t trackIndex);
 	void startEncode();
 	bool addPPS(uint8_t *pps ,int lenPPS,int trackIndex);
 	bool addSPS(uint8_t *sps ,int lenSPS,int trackIndex);
-	SyncBuffer* getBuffer(int trackIndex);
+	SSyncBuffer* getBuffer(int trackIndex);
 	STrackParam* getTrackParam(int trackIndex);
 
 

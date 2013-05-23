@@ -15,6 +15,7 @@ namespace Seraphim{
 		int readInt(uint32_t* dst,uint8_t numBit,bool isBitEnd=true);
 		int readShort(uint16_t* dst,uint8_t numBit,bool isBitEnd=true);
 		int readLong(uint64_t* dst,uint8_t numBit,bool isBitEnd=true);
+		size_t getRemainSize(){return  (len-positionByte-1)+positionBit;}   
 		~SBitReader(){delete[] buf;};
 	};
 };

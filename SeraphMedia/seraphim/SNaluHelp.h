@@ -22,7 +22,7 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	class NaluHelp{
+	class SNaluHelp{
 	private :
 		FILE* file;
 		uint8_t* buf;
@@ -32,9 +32,9 @@ namespace Seraphim{
 		bool fullBuffer();
 		bool checkEmpty();
 	public :
-		NaluHelp(char* fileName,size_t maxSize=1024*512);
+		SNaluHelp(char* fileName,size_t maxSize=1024*512);
 		uint8_t* nextNALU();
-		~NaluHelp(){delete[] buf;fclose(file);}
+		~SNaluHelp(){delete[] buf;fclose(file);}
 	};
 
 };

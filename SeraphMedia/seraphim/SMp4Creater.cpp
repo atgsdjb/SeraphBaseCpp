@@ -1,8 +1,8 @@
-#include"mp4_creater.h"
+#include"SMp4Creater.h"
 #ifdef DEBUG
 #include<iostream>
 #include<cassert>
-#include"nalu_help.h"
+#include"SNaluHelp.h"
 #endif
 
 /**test**/
@@ -21,10 +21,21 @@ namespace Seraphim{
 		}
 		return 0;
 	}
+	SMp4Creater::SMp4Creater(const char* _name,map<uint8_t,STrackParam*> _trackParamS,map<uint8_t,SSyncBuffer*> _trackBufS,bool _isAsyn/* =false */,CompleteListener _listener/* =0 */)
+	:name(_name),trackParamS(_trackParamS),trackBufS(_trackBufS){
+		assert(_trackBufS.size() == _trackParamS.size());
+		trackCount = _trackBufS.size(); 
+		for(int i = 0;i< trackCount;i++){
+			trackS[i] = MP4_INVALID_TRACK_ID;
+		}
+		initTracks();
+	}
+
+
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>&_trackParam,const vector<SyncBuffer*>& _trackBufS,bool _isAsyn,CompleteListener _listener)
+	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>&_trackParam,const vector<SSyncBuffer*>& _trackBufS,bool _isAsyn,CompleteListener _listener)
 	:name(_name),duration(_duration),listener(_listener),isAsyn(_isAsyn){
 		int i = 0;
 		assert(_trackParam.size() == _trackBufS.size());
@@ -41,7 +52,7 @@ namespace Seraphim{
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/
-	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam* _trackParam,SyncBuffer* _trackBufS,bool _isAsyn,CompleteListener _listener)
+	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam* _trackParam,SSyncBuffer* _trackBufS,bool _isAsyn,CompleteListener _listener)
 		:name(_name),duration(_duration),listener(_listener),isAsyn(_isAsyn){
 		int i;
 		for (i = 0;i<trackCount;i++){
@@ -149,6 +160,7 @@ namespace Seraphim{
 				}
 				//cout<<"--------------------------------"<<g_index++<<"----------------"<<"len="<<len<<"-----------------------"<<endl;
 				MP4WriteSample(file,trackS[i],sample,len);
+				delete[] sample;
 
 
 			}
@@ -160,7 +172,7 @@ namespace Seraphim{
 		
 	}
 	bool SMp4Creater::comlete(){
-		map<int,bool>::iterator i ;// trackCompleteS.begin();
+		map<uint8_t,bool>::iterator i ;// trackCompleteS.begin();
 		for(i=trackCompleteS.begin();i!=trackCompleteS.end();i++){
 			if(!i->second)
 				return false;
@@ -173,7 +185,7 @@ namespace Seraphim{
 	bool SMp4Creater::addSPS(uint8_t* pps ,int lenPPS,int trackIndex){
 		return MP4AddH264SequenceParameterSet(file,trackS[trackIndex],pps,lenPPS);
 	}
-	SyncBuffer* SMp4Creater::getBuffer(int trackIndex){
+	SSyncBuffer* SMp4Creater::getBuffer(int trackIndex){
 		return trackBufS[trackIndex];
 	}
 

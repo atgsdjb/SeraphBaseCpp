@@ -1,6 +1,6 @@
-#include"sync_buf.h"
+#include"SSyncBuf.h"
 namespace Seraphim{
-	SyncBuffer::SyncBuffer():endFlg(false){
+	SSyncBuffer::SSyncBuffer():endFlg(false){
 		mutex = PTHREAD_MUTEX_INITIALIZER;
 		condMutex = PTHREAD_MUTEX_INITIALIZER;
 		cond = PTHREAD_COND_INITIALIZER;
@@ -8,7 +8,7 @@ namespace Seraphim{
 		waitTime->tv_sec=0;
 		waitTime->tv_nsec=10000;
 	}
-	void SyncBuffer::write23(uint8_t* src,size_t size){
+	void SSyncBuffer::write23(uint8_t* src,size_t size){
 		pthread_mutex_lock(&mutex);
 		d_buf.push_back(src);
 		size_buf.push_back(size);
@@ -17,7 +17,7 @@ namespace Seraphim{
 		pthread_mutex_unlock(&condMutex);
 		pthread_mutex_unlock(&mutex);
 	}
-	int SyncBuffer::read(uint8_t** dis){
+	int SSyncBuffer::read(uint8_t** dis){
 		pthread_mutex_lock(&condMutex);
 		int  waitCount = 0;
 		while(d_buf.empty()){
@@ -42,7 +42,7 @@ namespace Seraphim{
 		pthread_mutex_unlock(&mutex);
 		return result;
 	}
-	void SyncBuffer::disable(){
+	void SSyncBuffer::disable(){
 		pthread_mutex_lock(&mutex);
 		pthread_mutex_lock(&condMutex);
 		endFlg =true;
@@ -50,12 +50,12 @@ namespace Seraphim{
 		pthread_mutex_unlock(&mutex);
 		pthread_mutex_unlock(&condMutex);
 	}
-	SyncBuffer::~SyncBuffer(){
+	SSyncBuffer::~SSyncBuffer(){
 		pthread_mutex_destroy(&mutex);
 		pthread_mutex_destroy(&condMutex);
 		pthread_cond_destroy(&cond);
 	}
-	void SyncBuffer::writeBack(uint8_t *data,size_t size){
+	void SSyncBuffer::writeBack(uint8_t *data,size_t size){
 		pthread_mutex_lock(&mutex);
 		d_buf.push_front(data);
 		size_buf.push_front(size);

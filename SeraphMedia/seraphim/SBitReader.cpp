@@ -1,4 +1,4 @@
-#include"bit_reader.h"
+#include"SBitReader.h"
 #include"s_config.h"
 namespace Seraphim{
 	/************************************************************************/

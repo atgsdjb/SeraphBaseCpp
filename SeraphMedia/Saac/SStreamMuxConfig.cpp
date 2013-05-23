@@ -21,10 +21,10 @@ void SStreamMuxConfig::process(){
 		numSubFrames = getByte(6);
 		numProgram = getByte(4);
 		prog_S = new SStreamMuxConfig_Prog[numProgram];
-		for(int i =0;i<numProgram;i++){
+		for(int i =0;i<=numProgram;i++){
 			prog_S[i].numLayer = getByte(3);
 			prog_S[i].layer_S = new SStreamMuxConfig_Prog_Layer[prog_S[i].numLayer];
-			for(int l = 0;l<prog_S[i].numLayer;l++){
+			for(int l = 0;l<=prog_S[i].numLayer;l++){
 				SStreamMuxConfig_Prog_Layer *layer = &(prog_S[i].layer_S[l]);
 
 				if(l==0 && i == 0){
@@ -51,6 +51,22 @@ void SStreamMuxConfig::process(){
 				case 3:case 4:case 5:break;
 				case 6:case 7:break;
 				}
+			}
+		}
+		otherDataPresent = getByte(1);
+		if(otherDataPresent){
+			if(audioMuxVersionA == 1){
+
+			}else{
+				otherDataLen_S = 0;
+				OtherDataLen l_other;
+				uint32_t otherDataLenBits = 0; /* helper variable 32bit */           
+				do {           
+					otherDataLenBits *= 2^8;           
+					l_other.otherDataLenEsc = getByte(1);  //1       //uimsbf 
+					l_other.otherDataLenTmp;  //8      // uimsbf 
+						otherDataLenBits += l_other.otherDataLenTmp;           
+				} while (l_other.otherDataLenEsc); 
 			}
 		}
 		crcCheckPresent = getByte(1);

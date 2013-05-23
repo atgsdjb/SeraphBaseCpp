@@ -11,7 +11,7 @@ extern"C"{
 using namespace std;
 
 namespace Seraphim{
-	class SyncBuffer{
+	class SSyncBuffer{
 	private:
 		pthread_mutex_t mutex;
 		pthread_cond_t  cond;
@@ -25,8 +25,8 @@ namespace Seraphim{
 		int	 read(uint8_t** dst); 
 		void disable();
 		void writeBack(uint8_t* data,size_t size);
-		SyncBuffer();
-		~SyncBuffer();		
+		SSyncBuffer();
+		~SSyncBuffer();		
 	};
 };
 #endif
