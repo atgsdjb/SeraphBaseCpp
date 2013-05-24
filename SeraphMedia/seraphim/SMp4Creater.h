@@ -43,7 +43,7 @@ private:
 public:
 	SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam *_trackParam,SSyncBuffer* _trackBufS, bool _isAsyn=false, CompleteListener _listener=0);
 	SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>& _trackParam,const vector<SSyncBuffer*>& _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);	
-	SMp4Creater(const char* _name,map<uint8_t,STrackParam*> _trackParamS,map<uint8_t,SSyncBuffer*> _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);
+	SMp4Creater(const char* _name,uint32_t _duration,map<uint8_t,STrackParam*> _trackParamS,map<uint8_t,SSyncBuffer*> _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);
 	void addSample8(uint8_t *sample,size_t size,uint8_t trackIndex);
 	void addSample16(uint16_t* sample,size_t size,uint8_t trackIndex);
 	void startEncode();

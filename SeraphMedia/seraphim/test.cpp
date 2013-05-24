@@ -1,6 +1,6 @@
 //#include"s_config.h" 
 //#include<cassert>
-//#include<iostream>
+#include<iostream>
 //#include<vector>
 //#include"pthread.h"
 //#include"../Saac/SAudioMuxElement.h"
@@ -10,10 +10,11 @@
 //#include"sync_buf.h"
 //#include"SNaluHelp.h"
 //#include"yuv420.h"
-//extern"C"{
-//#include"x264.h"
-//#include"../aac/faac.h"
-//};
+#include<stdint.h>
+#include"x264.h"
+#include"../aac/faac.h"
+#include<stdio.h>
+
 //
 //using namespace std;
 //using namespace Seraphim;
@@ -135,58 +136,48 @@
 ///************************************************************************/
 ///*                                                                      */
 ///************************************************************************/
-//void* aacEncodeThread(void* param){
-//	FILE* aacFile = fopen("d:\\1video\\t4.aac","wb+");
-//	FILE* pcmFile = fopen("d:\\1video\\t4.pcm","rb");
-//	SMp4Creater *handler = (SMp4Creater*)param;
-//	STrackParam *p = handler->getTrackParam(1);
-//	if(p->getType()!=1){
-//#ifdef SDEBUG
-//		assert(0);
-//#endif
-//		exit(1);
-//	}
-//	SAudioTrackParam *audioParm = (SAudioTrackParam*)p; 
-//		//QAudioTrackParam *audioP = (QAudioTrackParam*)trackParam;
-//	unsigned long sampleRate = audioParm->sampleRate;
-//	unsigned long bitRate = audioParm->bitRate;
-//	int numChannels = 1;
-//	unsigned long inputBuffSize;
-//	unsigned long outBuffSize;
-//
-//	faacEncHandle aacHandler = faacEncOpen(sampleRate,numChannels,&inputBuffSize,&outBuffSize);
-//	faacEncConfigurationPtr conf = faacEncGetCurrentConfiguration(aacHandler);
-//	conf->bitRate = bitRate;
-//	conf->inputFormat = FAAC_INPUT_16BIT;
-//	//conf->channel_map =
-//	conf->mpegVersion = MPEG4;
-//	faacEncSetConfiguration(aacHandler,conf);
-//	uint8_t* pcm=new uint8_t[1024*2];
-//	SyncBuffer *aacBuffer = handler->getBuffer(1);
-//	int len=-1;
-//	uint8_t *l_sample=new uint8_t[1024*2];
-//	size_t enc_len;
-//	int lenRead=fread(pcm,1,2048,pcmFile);
-//	do{
-//		
-//		/*int pcmOffset;
-//		for(pcmOffset=0;pcmOffset<len;pcmOffset+=1024*2){*/
-//			enc_len = faacEncEncode(aacHandler,(int32_t*)pcm,1024,l_sample,1024*2);
-//			if(enc_len <=0){
-//				continue;
-//			}
-//			uint8_t* l_b = new uint8_t[enc_len];
-//			fwrite(l_sample,1,enc_len,aacFile);
-//			fflush(aacFile);
-//			memcpy(l_b,l_sample,enc_len);
-//#ifdef SDEBUG
-//#endif
-//			aacBuffer->write23(l_b,enc_len);
-//			lenRead = fread(pcm,1,2048,pcmFile);
-//		//}
-//	}while(lenRead==2048);
-//	return 0;
-//}
+void* aacEncodeThread(void* param){
+	FILE* aacFile = fopen("d:\\1video\\t4.aac","wb+");
+	FILE* pcmFile = fopen("d:\\1video\\t4.pcm","rb");
+	unsigned long sampleRate = 44100;
+	unsigned long bitRate = 32*1024;
+	int numChannels = 1;
+	unsigned long inputBuffSize;
+	unsigned long outBuffSize;
+	faacEncHandle aacHandler = faacEncOpen(sampleRate,numChannels,&inputBuffSize,&outBuffSize);
+	faacEncConfigurationPtr conf = faacEncGetCurrentConfiguration(aacHandler);
+	conf->bitRate = bitRate;
+	conf->inputFormat = FAAC_INPUT_16BIT;
+	conf->aacObjectType = LOW;
+	conf->mpegVersion = MPEG4;
+	faacEncSetConfiguration(aacHandler,conf);
+	uint8_t* pcm=new uint8_t[1024*2];
+	//SyncBuffer *aacBuffer = handler->getBuffer(1);
+	int len=-1;
+	uint8_t *l_sample=new uint8_t[1024*2];
+	size_t enc_len;
+	int lenRead=fread(pcm,1,2048,pcmFile);
+	do{
+		
+		/*int pcmOffset;
+		for(pcmOffset=0;pcmOffset<len;pcmOffset+=1024*2){*/
+			enc_len = faacEncEncode(aacHandler,(int32_t*)pcm,1024,l_sample,1024*2);
+			if(enc_len <=0){
+				continue;
+			}
+			uint8_t* l_b = new uint8_t[enc_len];
+			fwrite(l_sample,1,enc_len,aacFile);
+			fflush(aacFile);
+			memcpy(l_b,l_sample,enc_len);
+			fwrite(l_b,enc_len,1,aacFile);
+#ifdef SDEBUG
+#endif
+			//aacBuffer->write23(l_b,enc_len);
+			lenRead = fread(pcm,1,2048,pcmFile);
+		//}
+	}while(lenRead==2048);
+	return 0;
+}
 //
 ///************************************************************************/
 ///*                                                                      */
@@ -232,6 +223,10 @@
 //	cin>>i;
 //	return 0;
 //}
+int main23(int argc,char** argv){
+	aacEncodeThread(0);
+	return 0;
+}
 //int main4(int argc,char* argv){
 //	char* name ="d:\\1video\\seraphim2.mp4";
 //	vector<SyncBuffer*> buf;

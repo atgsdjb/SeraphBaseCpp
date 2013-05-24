@@ -21,8 +21,8 @@ namespace Seraphim{
 		}
 		return 0;
 	}
-	SMp4Creater::SMp4Creater(const char* _name,map<uint8_t,STrackParam*> _trackParamS,map<uint8_t,SSyncBuffer*> _trackBufS,bool _isAsyn/* =false */,CompleteListener _listener/* =0 */)
-	:name(_name),trackParamS(_trackParamS),trackBufS(_trackBufS){
+	SMp4Creater::SMp4Creater(const char* _name,uint32_t _duration,map<uint8_t,STrackParam*> _trackParamS,map<uint8_t,SSyncBuffer*> _trackBufS,bool _isAsyn/* =false */,CompleteListener _listener/* =0 */)
+	:name(_name),trackParamS(_trackParamS),trackBufS(_trackBufS),duration(_duration),isAsyn(_isAsyn),listener(_listener){
 		assert(_trackBufS.size() == _trackParamS.size());
 		trackCount = _trackBufS.size(); 
 		for(int i = 0;i< trackCount;i++){
@@ -70,8 +70,7 @@ namespace Seraphim{
 	}
 	void SMp4Creater::startEncode(){
 		if(isAsyn){
-			pthread_t tid;
-			pthread_create(&tid,0,encode_task,this);
+			encodeLoop();		
 		}else{
 			encodeLoop();
 		}
@@ -117,9 +116,11 @@ namespace Seraphim{
 			trackTimesTampS[i] = 0;
 		}
 	}
+#include<iostream>
 	static int g_index = 0;
 	void SMp4Creater::encodeLoop(){
 		int i ;
+		//std::cin>>i;
 		uint8_t* sample;
 		while(!comlete()){
 			for(i=0;i<trackCount;i++){
@@ -160,7 +161,7 @@ namespace Seraphim{
 				}
 				//cout<<"--------------------------------"<<g_index++<<"----------------"<<"len="<<len<<"-----------------------"<<endl;
 				MP4WriteSample(file,trackS[i],sample,len);
-				delete[] sample;
+				//delete[] sample;
 
 
 			}
