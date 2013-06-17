@@ -40,6 +40,7 @@ private:
 	bool comlete();
 	void initTracks();
 	void encodeLoop();
+	void encdeLoop2();
 public:
 	SMp4Creater(const char* _name,uint32_t _duration,uint8_t _trackCount,STrackParam *_trackParam,SSyncBuffer* _trackBufS, bool _isAsyn=false, CompleteListener _listener=0);
 	SMp4Creater(const char* _name,uint32_t _duration,const vector<STrackParam*>& _trackParam,const vector<SSyncBuffer*>& _trackBufS,bool _isAsyn=false,CompleteListener _listener=0);	

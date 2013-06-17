@@ -141,7 +141,7 @@ void addSample(uint8_t trackId,uint8_t* sample,size_t len){
 }
 
 
-int main(int argc,char** argv){
+int main234(int argc,char** argv){
 	char baseName[]="d:\\1video\\%04d.mp4";
 	STrackParam *v_param = new SVideoTrackParm(90000,352,288,1024 * 500,25,120*90000);
 	STrackParam *a_param = new SAudioTrackParam(44100,128*1024,44100,120 * 44100);

@@ -11,6 +11,7 @@ extern"C"{
 #include<stdio.h>
 };
 #endif
+//#include"../mp4/mp4track.h"
 namespace Seraphim{
 
 	static void* encode_task(void *handle){
@@ -84,13 +85,17 @@ namespace Seraphim{
 		return MP4AddAudioTrack(file,timeScale,sampleDuration);
 	}
 	MP4TrackId SMp4Creater::createVideoTrack(STrackParam* param){
+		MP4TrackId id = MP4_INVALID_TRACK_ID;
 		SVideoTrackParm *p =(SVideoTrackParm*)param;
 		uint32_t timeScale=p->timeScale;
 		MP4Duration sampleDuration = p->durationPreFrame;
 		uint16_t width =p->width;
 		uint16_t height = p->height;
 		//return MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x64,0x00,0x1f,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
-		return MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x4d/*MP4_MPEG4_VIDEO_TYPE*/,0x40/*0x00 */,0x1e/*0x1f*/,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
+		id =  MP4AddH264VideoTrack(file,timeScale,sampleDuration,width,height,0x4d/*MP4_MPEG4_VIDEO_TYPE*/,0x40/*0x00 */,0x1e/*0x1f*/,3);//MP4AddVideoTrack(file,timeScale,sampleDuration,width,height);
+		//MP4Track *track;
+		
+		return id;
 	}
 
 	void SMp4Creater::initTracks(){
@@ -172,6 +177,78 @@ namespace Seraphim{
 
 		
 	}
+
+	/************************************************************************/
+	/*                                                                      */
+	/************************************************************************/
+	void SMp4Creater::encdeLoop2(){
+		int i ;
+		uint8_t* sample;
+		int videoIndex=0;
+		while(!comlete()){
+			for(i=0;i<trackCount;i++){
+				bool isSync=false;
+				if(trackCompleteS[i]){
+					continue;
+				}
+				int len = trackBufS[i]->read(&sample);
+				if(len==0){
+
+					continue;
+				}
+				if(len == -1){
+					trackCompleteS[i]=true;
+					continue;
+				}
+
+				int type = trackParamS[i]->type;
+				if(type==0){
+					isSync  = isIFrame(sample);
+					if(trackTimesTampS[i] > trackDurationS[i]){   //��֤ûһvideo track  ��SPS PPS��ʼ
+						//td_printf("-   GET I FRAME   type=%x-----",sample[4]);
+						
+						uint8_t l_c =sample[5];
+						uint8_t l_d =sample[4];
+
+						if(isSync){
+						
+							trackBufS[i]->writeBack(sample,len);
+							
+							trackCompleteS[i]=true;
+							continue;
+						}
+					}else{									     //��д��A FRAME
+						//mp
+						//MP4WriteSample(file,trackS[i],sample,len);
+						//û����ַ���Ƶ���
+						trackTimesTampS[i] += ((SVideoTrackParm*)trackParamS[i])->durationPreFrame; 
+
+					}
+					/************/
+				}else if(type == 1){
+
+					trackTimesTampS[i]+=((SAudioTrackParam*)trackParamS[i])->durationPreFrame;
+					trackCompleteS[i] = trackTimesTampS[i] >= trackDurationS[i]; 
+					//td_printf("write into mp4 a audio addr = %p len=%d  index=%d-trackTimesTampS=%d---trackDurationS=%d-----\n",
+					//							      sample,len,indexA++,trackTimesTampS[i],trackDurationS[i]);
+				}
+				if(type==0){
+					//td_printf("---index=%d---isSync=%d-------sample[4]=%x--\n",videoIndex++,isSync,sample[4]);
+
+				}
+				MP4WriteSample(file,trackS[i],sample,len,isSync  /*false */);
+				delete sample;
+
+
+			}
+		}
+		MP4Close(file);
+		if(isAsyn && listener != 0)
+			listener();
+
+		
+	}
+
 	bool SMp4Creater::comlete(){
 		map<uint8_t,bool>::iterator i ;// trackCompleteS.begin();
 		for(i=trackCompleteS.begin();i!=trackCompleteS.end();i++){

@@ -1217,18 +1217,14 @@ MP4SampleId MP4Track::GetNextSyncSample(MP4SampleId sampleId)
 	return MP4_INVALID_SAMPLE_ID;
 }
 
-void MP4Track::UpdateSyncSamples(MP4SampleId sampleId, bool isSyncSample)
+void MP4Track::UpdateSyncSamples2(MP4SampleId sampleId, bool isSyncSample)
 {
 	if (isSyncSample) {
 		// if stss atom exists, add entry
 		if (m_pStssCountProperty) {
 			m_pStssSampleProperty->AddValue(sampleId);
 			m_pStssCountProperty->IncrementValue();
-		} // else nothing to do (yet)
-
-	} else { // !isSyncSample
-		// if stss atom doesn't exist, create one
-		if (m_pStssCountProperty == NULL) {
+		} else{
 
 			MP4Atom* pStssAtom = AddAtom("trak.mdia.minf.stbl", "stss");
 
@@ -1245,8 +1241,41 @@ void MP4Track::UpdateSyncSamples(MP4SampleId sampleId, bool isSyncSample)
 				m_pStssSampleProperty->AddValue(sid);
 				m_pStssCountProperty->IncrementValue();
 			}
-		} // else nothing to do
-	}
+		}
+
+	} 
+}
+
+void MP4Track::UpdateSyncSamples(MP4SampleId sampleId, bool isSyncSample)
+{
+
+	if (isSyncSample) {
+		//td_printf("----sampleId=%d--%d-----\n",sampleId,isSyncSample);
+		// if stss atom exists, add entry
+		if (m_pStssCountProperty) {
+			m_pStssSampleProperty->AddValue(sampleId);
+			m_pStssCountProperty->IncrementValue();
+		} else{
+
+			MP4Atom* pStssAtom = AddAtom("trak.mdia.minf.stbl", "stss");
+
+			pStssAtom->FindProperty(
+				"stss.entryCount",
+				(MP4Property**)&m_pStssCountProperty);
+
+			pStssAtom->FindProperty(
+				"stss.entries.sampleNumber",
+				(MP4Property**)&m_pStssSampleProperty);
+			m_pStssSampleProperty->AddValue(sampleId);
+			m_pStssCountProperty->IncrementValue();
+			// set values for all samples that came before this one
+			//for (MP4SampleId sid = 1; sid < sampleId; sid++) {
+			//	m_pStssSampleProperty->AddValue(sid);
+			//m_pStssCountProperty->IncrementValue();
+			//}
+		}
+
+	} 
 }
 
 MP4Atom* MP4Track::AddAtom(char* parentName, char* childName)
